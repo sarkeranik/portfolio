@@ -1,0 +1,5129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Project — Anik Sarker</title>
+    <meta
+      name="description"
+      content="Deep-dive into Anik Sarker's engineering projects — architecture, contributions, and impact."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink-1000: #060708;
+        --ink-950: #0a0c0f;
+        --ink-900: #0e1115;
+        --ink-850: #131820;
+        --ink-800: #181e27;
+        --ink-750: #1e2530;
+        --ink-700: #262e3b;
+        --line-faint: #1a212b;
+        --line: #232c38;
+        --line-strong: #313c4c;
+        --fg-1: #f2f5f8;
+        --fg-2: #aeb8c4;
+        --fg-3: #79838f;
+        --fg-4: #525c68;
+        --cyan-400: #3ee9e2;
+        --cyan-500: #21d9d2;
+        --cyan-600: #16b4ae;
+        --cyan-700: #0f8a85;
+        --magenta-500: #f6479a;
+        --green-500: #46de8b;
+        --amber-500: #ffb224;
+        --red-500: #ff5c5c;
+        --glow-cyan: rgba(33, 217, 210, 0.35);
+        --surface-base: var(--ink-900);
+        --surface-card: var(--ink-850);
+        --surface-raised: var(--ink-800);
+        --surface-hover: var(--ink-750);
+        --border-subtle: var(--line-faint);
+        --border-default: var(--line);
+        --border-strong: var(--line-strong);
+        --accent: var(--cyan-500);
+        --accent-fg: var(--ink-1000);
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
+        --shadow-lg: 0 12px 34px rgba(0, 0, 0, 0.55);
+        --edge-top: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+        --ease-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
+        --dur-fast: 120ms;
+        --dur-base: 180ms;
+        --font-display: "Space Grotesk", system-ui, sans-serif;
+        --font-ui: "Space Grotesk", system-ui, sans-serif;
+        --font-mono:
+          "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--font-ui);
+        background: var(--ink-950);
+        color: var(--fg-1);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      ::selection {
+        background: rgba(33, 217, 210, 0.28);
+        color: var(--fg-1);
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      button {
+        font-family: inherit;
+        cursor: pointer;
+      }
+
+      @keyframes pxl-glow {
+        0%,
+        100% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      @keyframes pxl-float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+      @keyframes mascot-bob {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-4px);
+        }
+      }
+      @keyframes mascot-blink {
+        0%,
+        92%,
+        100% {
+          transform: scaleY(1);
+        }
+        96% {
+          transform: scaleY(0.08);
+        }
+      }
+      @keyframes mascot-wave {
+        0%,
+        100% {
+          transform: rotate(8deg);
+        }
+        25% {
+          transform: rotate(-38deg);
+        }
+        60% {
+          transform: rotate(-14deg);
+        }
+      }
+      @keyframes mascot-pop {
+        0% {
+          transform: scale(0.6) translateY(6px);
+          opacity: 0;
+        }
+        60% {
+          transform: scale(1.06) translateY(0);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1) translateY(0);
+          opacity: 1;
+        }
+      }
+      @keyframes reveal-up {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes pulse-ring {
+        0% {
+          transform: scale(0.92);
+          opacity: 0.7;
+        }
+        100% {
+          transform: scale(1.22);
+          opacity: 0;
+        }
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 0.55s var(--ease-out),
+          transform 0.55s var(--ease-out);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: none;
+      }
+      .pxl-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 38px;
+        padding: 0 18px;
+        background: var(--accent);
+        color: var(--accent-fg);
+        font-size: 13.5px;
+        font-weight: 600;
+        border-radius: 8px;
+        box-shadow: var(--shadow-sm);
+        transition:
+          background var(--dur-fast),
+          box-shadow var(--dur-base);
+        border: none;
+      }
+      .pxl-cta:hover {
+        background: var(--cyan-400);
+        box-shadow:
+          0 0 0 1px rgba(33, 217, 210, 0.5),
+          0 0 22px -4px var(--glow-cyan);
+      }
+      .pxl-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 38px;
+        padding: 0 18px;
+        background: var(--surface-raised);
+        color: var(--fg-1);
+        font-size: 13.5px;
+        font-weight: 600;
+        border: 1px solid var(--border-strong);
+        border-radius: 8px;
+        box-shadow: var(--edge-top);
+        transition:
+          background var(--dur-fast),
+          border-color var(--dur-fast);
+      }
+      .pxl-ghost:hover {
+        background: var(--surface-hover);
+      }
+      .tech-tag {
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        color: var(--cyan-400);
+        background: rgba(33, 217, 210, 0.08);
+        border: 1px solid rgba(33, 217, 210, 0.25);
+      }
+      .metric-card {
+        padding: 20px 24px;
+        background: var(--surface-card);
+        border: 1px solid var(--border-default);
+        border-radius: 12px;
+        box-shadow: var(--edge-top), var(--shadow-sm);
+      }
+      ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--ink-900);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--line-strong);
+        border-radius: 3px;
+      }
+
+      /* ── Architecture diagram ── */
+      #arch-wrapper {
+        position: relative;
+        background: var(--ink-1000);
+        border: 1px solid var(--border-default);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: var(--edge-top), var(--shadow-lg);
+      }
+      #arch-canvas {
+        display: block;
+        width: 100%;
+        cursor: grab;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      #arch-canvas.dragging {
+        cursor: grabbing;
+      }
+      #arch-tooltip {
+        position: absolute;
+        pointer-events: none;
+        background: var(--ink-900);
+        border: 1px solid rgba(33, 217, 210, 0.35);
+        border-radius: 10px;
+        padding: 12px 14px;
+        box-shadow:
+          0 8px 28px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(33, 217, 210, 0.08);
+        width: 340px;
+        max-width: calc(100vw - 32px);
+        opacity: 0;
+        transform: translateY(6px);
+        transition:
+          opacity 0.18s,
+          transform 0.18s;
+        z-index: 20;
+      }
+      #arch-tooltip.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      #arch-controls {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        display: flex;
+        gap: 6px;
+        z-index: 16;
+      }
+      .arch-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        background: rgba(10, 12, 15, 0.72);
+        border: 1px solid var(--border-strong);
+        border-radius: 7px;
+        color: var(--fg-2);
+        font-size: 14px;
+        font-family: var(--font-mono);
+        backdrop-filter: blur(6px);
+        transition:
+          color var(--dur-fast),
+          border-color var(--dur-fast);
+      }
+      .arch-btn:hover {
+        color: var(--cyan-400);
+        border-color: rgba(33, 217, 210, 0.4);
+      }
+      #arch-legend {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        display: flex;
+        gap: 14px;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--fg-3);
+        z-index: 10;
+        background: rgba(10, 12, 15, 0.6);
+        padding: 6px 10px;
+        border-radius: 7px;
+        backdrop-filter: blur(4px);
+      }
+      .leg-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      /* ── Page shell + ToC sidebar ── */
+      section[id] {
+        scroll-margin-top: 80px;
+      }
+      .page-shell {
+        max-width: 1360px;
+        margin: 0 auto;
+      }
+      @media (min-width: 1180px) {
+        .page-shell {
+          display: grid;
+          grid-template-columns: 214px minmax(0, 1fr);
+          gap: 30px;
+          align-items: start;
+        }
+        .page-main {
+          min-width: 0;
+        }
+      }
+      #toc {
+        display: none;
+      }
+      @media (min-width: 1180px) {
+        #toc {
+          display: block;
+          position: sticky;
+          top: 78px;
+          align-self: start;
+          max-height: calc(100vh - 96px);
+          overflow-y: auto;
+          padding: 16px 0 24px;
+        }
+      }
+      #toc .toc-head {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--fg-4);
+        margin: 0 0 14px 14px;
+      }
+      .toc-link {
+        position: relative;
+        display: block;
+        padding: 7px 14px;
+        font-size: 13.5px;
+        line-height: 1.3;
+        color: var(--fg-3);
+        border-left: 2px solid var(--border-default);
+        transition:
+          color var(--dur-fast),
+          border-color var(--dur-fast),
+          background var(--dur-fast);
+        cursor: pointer;
+      }
+      .toc-link:hover {
+        color: var(--fg-1);
+      }
+      .toc-link.sub {
+        padding-left: 28px;
+        font-size: 12.5px;
+        color: var(--fg-4);
+      }
+      .toc-link.active {
+        color: var(--cyan-400);
+        border-left-color: var(--cyan-500);
+        background: linear-gradient(
+          90deg,
+          rgba(33, 217, 210, 0.08),
+          transparent
+        );
+      }
+      .toc-link.sub.active {
+        color: var(--cyan-400);
+      }
+
+      /* ── Architecture caption bar + walkthrough controls ── */
+      #arch-caption {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 14;
+        padding: 18px 20px 16px;
+        background: linear-gradient(
+          0deg,
+          rgba(6, 7, 8, 0.95),
+          rgba(6, 7, 8, 0.78) 55%,
+          rgba(6, 7, 8, 0)
+        );
+        pointer-events: none;
+      }
+      #arch-caption .cap-step {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--cyan-500);
+        margin-bottom: 6px;
+      }
+      #arch-caption .cap-title {
+        font-family: var(--font-display);
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: var(--fg-1);
+        margin-bottom: 9px;
+      }
+      #arch-caption .cap-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-bottom: 9px;
+      }
+      #arch-caption .cap-chip {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 5px;
+        color: var(--cyan-400);
+        background: rgba(33, 217, 210, 0.08);
+        border: 1px solid rgba(33, 217, 210, 0.22);
+      }
+      #arch-caption .cap-desc {
+        font-size: 13px;
+        line-height: 1.55;
+        color: var(--fg-2);
+        max-width: 680px;
+      }
+      #arch-stepbar {
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .pb-btns {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .pb-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 36px;
+        padding: 0 16px;
+        border-radius: 8px;
+        background: var(--accent);
+        color: var(--accent-fg);
+        font-size: 13px;
+        font-weight: 600;
+        font-family: var(--font-ui);
+        border: none;
+        box-shadow: var(--shadow-sm);
+        transition:
+          background var(--dur-fast),
+          box-shadow var(--dur-base);
+      }
+      .pb-btn:hover {
+        background: var(--cyan-400);
+        box-shadow:
+          0 0 0 1px rgba(33, 217, 210, 0.5),
+          0 0 20px -4px var(--glow-cyan);
+      }
+      .pb-nav {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 36px;
+        width: 40px;
+        border-radius: 8px;
+        background: var(--surface-raised);
+        color: var(--fg-2);
+        border: 1px solid var(--border-strong);
+        font-family: var(--font-mono);
+        font-size: 16px;
+        transition:
+          color var(--dur-fast),
+          border-color var(--dur-fast);
+      }
+      .pb-nav:hover {
+        color: var(--cyan-400);
+        border-color: rgba(33, 217, 210, 0.4);
+      }
+      #arch-dots {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        flex-wrap: wrap;
+      }
+      .pb-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--line-strong);
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        transition:
+          background var(--dur-fast),
+          transform var(--dur-fast);
+      }
+      .pb-dot:hover {
+        background: var(--fg-3);
+        transform: scale(1.25);
+      }
+      .pb-dot.active {
+        background: var(--cyan-500);
+        box-shadow: 0 0 8px var(--cyan-500);
+        transform: scale(1.15);
+      }
+      .pb-count {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--fg-3);
+        margin-left: auto;
+      }
+      @media (max-width: 600px) {
+        #arch-caption .cap-desc {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── MASCOT ── -->
+    <div
+      id="mascot"
+      style="
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 99998;
+        pointer-events: none;
+        will-change: transform;
+      "
+    >
+      <div
+        id="mascot-bob"
+        style="
+          position: relative;
+          animation: mascot-bob 3.2s ease-in-out infinite;
+        "
+      >
+        <div
+          id="mascot-bubble"
+          style="
+            position: absolute;
+            left: 40px;
+            bottom: 44px;
+            min-width: 90px;
+            max-width: 220px;
+            padding: 9px 12px;
+            background: var(--ink-1000);
+            border: 1px solid rgba(33, 217, 210, 0.45);
+            border-radius: 12px 12px 12px 3px;
+            box-shadow:
+              0 0 0 1px rgba(33, 217, 210, 0.1),
+              0 10px 30px -8px rgba(0, 0, 0, 0.7);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--fg-1);
+            opacity: 0;
+            transform: scale(0.6);
+            transform-origin: left bottom;
+            pointer-events: none;
+            transition:
+              opacity 0.3s ease,
+              transform 0.3s ease;
+          "
+        >
+          <span
+            style="
+              position: absolute;
+              top: 6px;
+              left: -6px;
+              color: var(--cyan-500);
+              font-size: 11px;
+            "
+            >❯</span
+          >
+          <span id="mascot-say"></span>
+        </div>
+        <svg
+          width="48"
+          height="58"
+          viewBox="0 0 46 60"
+          fill="none"
+          style="
+            display: block;
+            filter: drop-shadow(0 0 12px rgba(33, 217, 210, 0.25))
+              drop-shadow(0 5px 10px rgba(0, 0, 0, 0.5));
+          "
+        >
+          <g
+            id="mascot-face"
+            style="transform-box: fill-box; transform-origin: center"
+          >
+            <line
+              x1="23"
+              y1="13"
+              x2="23"
+              y2="5"
+              stroke="var(--cyan-500)"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <circle cx="23" cy="3.4" r="3.1" fill="var(--cyan-400)">
+              <animate
+                attributeName="opacity"
+                values="1;.45;1"
+                dur="1.4s"
+                repeatCount="indefinite"
+              />
+            </circle>
+            <rect
+              x="5.5"
+              y="12"
+              width="35"
+              height="27"
+              rx="8"
+              fill="var(--ink-850)"
+              stroke="var(--cyan-600)"
+              stroke-width="1.4"
+            />
+            <rect
+              x="9.5"
+              y="16"
+              width="27"
+              height="19"
+              rx="5"
+              fill="var(--ink-1000)"
+              stroke="rgba(33,217,210,.18)"
+              stroke-width="1"
+            />
+            <g
+              id="mascot-eyes"
+              style="animation: mascot-blink 4.6s steps(1, end) 1.2s infinite"
+            >
+              <rect
+                x="13.5"
+                y="20.5"
+                width="5.4"
+                height="7"
+                rx="2.4"
+                fill="var(--cyan-400)"
+                style="filter: drop-shadow(0 0 4px rgba(33, 217, 210, 0.7))"
+              />
+              <rect
+                x="27.1"
+                y="20.5"
+                width="5.4"
+                height="7"
+                rx="2.4"
+                fill="var(--cyan-400)"
+                style="filter: drop-shadow(0 0 4px rgba(33, 217, 210, 0.7))"
+              />
+            </g>
+            <path
+              d="M18.5 31 Q23 33.4 27.5 31"
+              stroke="var(--cyan-500)"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              fill="none"
+            />
+          </g>
+          <rect
+            x="2"
+            y="40"
+            width="6.2"
+            height="4.2"
+            rx="2.1"
+            fill="var(--ink-700)"
+            stroke="var(--line)"
+            stroke-width="1"
+          />
+          <g
+            id="mascot-arm"
+            style="transform-box: fill-box; transform-origin: 90% 18%"
+          >
+            <rect
+              x="37.8"
+              y="40"
+              width="6.2"
+              height="4.2"
+              rx="2.1"
+              fill="var(--cyan-600)"
+              stroke="var(--cyan-500)"
+              stroke-width=".8"
+            />
+          </g>
+          <rect
+            x="12"
+            y="40"
+            width="22"
+            height="15"
+            rx="6"
+            fill="var(--ink-800)"
+            stroke="var(--line)"
+            stroke-width="1.2"
+          />
+          <rect
+            x="16"
+            y="55"
+            width="4.5"
+            height="4"
+            rx="1.6"
+            fill="var(--ink-700)"
+          />
+          <rect
+            x="25.5"
+            y="55"
+            width="4.5"
+            height="4"
+            rx="1.6"
+            fill="var(--ink-700)"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <!-- ── NAV ── -->
+    <header
+      style="
+        position: sticky;
+        top: 0;
+        z-index: 9000;
+        backdrop-filter: blur(14px) saturate(140%);
+        background: rgba(10, 12, 15, 0.72);
+        border-bottom: 1px solid var(--border-subtle);
+      "
+    >
+      <nav
+        style="
+          max-width: 1080px;
+          margin: 0 auto;
+          height: 60px;
+          padding: 0 24px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        "
+      >
+        <a
+          href="index.html#work"
+          style="
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--fg-2);
+            font-family: var(--font-mono);
+            font-size: 13.5px;
+            transition: color var(--dur-fast);
+          "
+          onmouseover="this.style.color = 'var(--cyan-400)'"
+          onmouseout="this.style.color = 'var(--fg-2)'"
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M19 12H5" />
+            <path d="M12 19l-7-7 7-7" />
+          </svg>
+          anik<span style="color: var(--cyan-400)">·</span>sarker / work
+        </a>
+        <a
+          href="mailto:ach6266@gmail.com"
+          class="pxl-cta"
+          data-mascot-say="hire this person :)"
+          >Get in touch</a
+        >
+      </nav>
+    </header>
+
+    <div class="page-shell">
+      <!-- ── TABLE OF CONTENTS ── -->
+      <aside id="toc">
+        <div class="toc-head">// on this page</div>
+        <nav id="toc-nav"></nav>
+      </aside>
+
+      <main class="page-main">
+        <!-- ── HERO ── -->
+        <section
+          id="hero"
+          style="
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 48px 24px 40px;
+            position: relative;
+            overflow: hidden;
+          "
+        >
+          <div
+            style="
+              position: absolute;
+              top: -90px;
+              right: -80px;
+              width: 560px;
+              height: 360px;
+              background: radial-gradient(
+                closest-side,
+                rgba(33, 217, 210, 0.12),
+                transparent 75%
+              );
+              pointer-events: none;
+            "
+          ></div>
+          <div class="reveal">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 18px;
+              "
+              id="hero-badges"
+            ></div>
+            <h1
+              id="proj-title"
+              data-mascot-say=""
+              style="
+                font-family: var(--font-display);
+                font-weight: 700;
+                font-size: clamp(32px, 5.5vw, 60px);
+                line-height: 1.02;
+                letter-spacing: -0.03em;
+                color: var(--fg-1);
+              "
+            ></h1>
+            <p
+              id="proj-tagline"
+              style="
+                margin: 18px 0 0;
+                max-width: 700px;
+                font-size: 18px;
+                line-height: 1.6;
+                color: var(--fg-2);
+              "
+            ></p>
+            <div
+              style="
+                margin-top: 24px;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 10px 22px;
+              "
+              id="proj-meta"
+            ></div>
+            <div
+              style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 7px"
+              id="proj-badges"
+            ></div>
+          </div>
+          <!-- Key metrics strip -->
+          <div
+            id="metrics-strip"
+            class="reveal"
+            style="
+              margin-top: 40px;
+              display: grid;
+              grid-template-columns: repeat(4, 1fr);
+              gap: 14px;
+            "
+          ></div>
+        </section>
+
+        <!-- ── THE PROBLEM ── -->
+        <section
+          id="problem"
+          style="max-width: 1080px; margin: 0 auto; padding: 8px 24px 40px"
+        >
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 1.4fr 1fr;
+              gap: 36px;
+              align-items: start;
+            "
+          >
+            <div class="reveal">
+              <div
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 11px;
+                  letter-spacing: 0.12em;
+                  text-transform: uppercase;
+                  color: var(--cyan-500);
+                  margin-bottom: 12px;
+                "
+              >
+                // the problem
+              </div>
+              <h2
+                style="
+                  font-family: var(--font-display);
+                  font-weight: 700;
+                  font-size: clamp(22px, 3vw, 32px);
+                  letter-spacing: -0.02em;
+                  margin-bottom: 18px;
+                  color: var(--fg-1);
+                "
+              >
+                What needed to be built
+              </h2>
+              <p
+                id="proj-overview"
+                style="font-size: 16px; line-height: 1.75; color: var(--fg-2)"
+              ></p>
+            </div>
+            <div
+              class="reveal"
+              style="
+                padding: 22px;
+                background: var(--surface-card);
+                border: 1px solid var(--border-default);
+                border-radius: 12px;
+                box-shadow: var(--edge-top), var(--shadow-sm);
+              "
+              data-mascot-say="the parts anik personally designed and shipped on this project."
+            >
+              <div
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 11px;
+                  letter-spacing: 0.12em;
+                  text-transform: uppercase;
+                  color: var(--fg-3);
+                  margin-bottom: 14px;
+                "
+              >
+                // what i owned
+              </div>
+              <div
+                id="proj-owned"
+                style="display: flex; flex-direction: column; gap: 11px"
+              ></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── ARCHITECTURE ── -->
+        <section
+          id="architecture"
+          data-section-say="interactive architecture — drag to pan, scroll to zoom, hover a node for details."
+          style="max-width: 1080px; margin: 0 auto; padding: 40px 24px"
+        >
+          <div
+            class="reveal"
+            style="
+              margin-bottom: 24px;
+              display: flex;
+              align-items: flex-end;
+              justify-content: space-between;
+              flex-wrap: wrap;
+              gap: 12px;
+            "
+          >
+            <div>
+              <div
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 11px;
+                  letter-spacing: 0.12em;
+                  text-transform: uppercase;
+                  color: var(--cyan-500);
+                  margin-bottom: 10px;
+                "
+              >
+                // architecture · guided walkthrough
+              </div>
+              <h2
+                style="
+                  font-family: var(--font-display);
+                  font-weight: 700;
+                  font-size: clamp(24px, 3.5vw, 36px);
+                  letter-spacing: -0.025em;
+                  color: var(--fg-1);
+                "
+              >
+                How the system fits together
+              </h2>
+              <p
+                style="
+                  margin-top: 8px;
+                  font-size: 14px;
+                  color: var(--fg-3);
+                  font-family: var(--font-mono);
+                "
+              >
+                press play to walk it stage by stage · drag to pan · scroll to
+                zoom · hover a node
+              </p>
+            </div>
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                font-family: var(--font-mono);
+                font-size: 11px;
+                color: var(--fg-3);
+              "
+            >
+              <span style="display: flex; align-items: center; gap: 5px"
+                ><span
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: var(--cyan-400);
+                    box-shadow: 0 0 8px var(--cyan-500);
+                    display: inline-block;
+                  "
+                ></span
+                >data flow</span
+              >
+              <span style="display: flex; align-items: center; gap: 5px"
+                ><span
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 3px;
+                    border: 1.5px solid var(--cyan-500);
+                    display: inline-block;
+                  "
+                ></span
+                >active stage</span
+              >
+            </div>
+          </div>
+          <div class="reveal" id="arch-wrapper" style="height: 460px">
+            <canvas id="arch-canvas"></canvas>
+            <div id="arch-tooltip">
+              <div
+                id="arch-tt-name"
+                style="
+                  font-family: var(--font-display);
+                  font-size: 13.5px;
+                  font-weight: 600;
+                  color: var(--fg-1);
+                  margin-bottom: 4px;
+                "
+              ></div>
+              <div
+                id="arch-tt-sub"
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 10px;
+                  color: var(--cyan-500);
+                  margin-bottom: 7px;
+                  letter-spacing: 0.04em;
+                "
+              ></div>
+              <div
+                id="arch-tt-desc"
+                style="font-size: 12.5px; line-height: 1.55; color: var(--fg-2)"
+              ></div>
+            </div>
+            <div id="arch-controls">
+              <button class="arch-btn" id="arch-zoom-in" title="Zoom in">
+                +
+              </button>
+              <button class="arch-btn" id="arch-zoom-out" title="Zoom out">
+                −
+              </button>
+              <button
+                class="arch-btn"
+                id="arch-reset"
+                title="Reset to overview"
+                style="font-size: 11px"
+              >
+                ⌂
+              </button>
+            </div>
+            <div id="arch-caption">
+              <div class="cap-step" id="cap-step">Overview</div>
+              <div class="cap-title" id="cap-title"></div>
+              <div class="cap-chips" id="cap-chips"></div>
+              <div class="cap-desc" id="cap-desc"></div>
+            </div>
+          </div>
+          <div class="reveal" id="arch-stepbar">
+            <div class="pb-btns">
+              <button class="pb-nav" id="arch-prev" title="Previous stage">
+                ‹
+              </button>
+              <button class="pb-btn" id="arch-play">
+                <span id="play-ico">▶</span
+                ><span id="play-txt">Play walkthrough</span>
+              </button>
+              <button class="pb-nav" id="arch-next" title="Next stage">
+                ›
+              </button>
+            </div>
+            <div id="arch-dots"></div>
+            <div class="pb-count" id="arch-count">01 / 01</div>
+          </div>
+        </section>
+
+        <!-- ── REQUEST LIFECYCLE ── -->
+        <section
+          id="lifecycle"
+          style="max-width: 1080px; margin: 0 auto; padding: 8px 24px 40px"
+        >
+          <div class="reveal" style="margin-bottom: 18px">
+            <div
+              style="
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--cyan-500);
+                margin-bottom: 10px;
+              "
+            >
+              // request lifecycle
+            </div>
+            <h2
+              style="
+                font-family: var(--font-display);
+                font-weight: 700;
+                font-size: clamp(22px, 3vw, 32px);
+                letter-spacing: -0.02em;
+                color: var(--fg-1);
+              "
+            >
+              A request, step by step
+            </h2>
+          </div>
+          <div
+            id="lifecycle-steps"
+            class="reveal"
+            style="
+              display: flex;
+              align-items: flex-start;
+              flex-wrap: wrap;
+              gap: 0;
+            "
+          ></div>
+        </section>
+
+        <!-- ── CONTRIBUTIONS ── -->
+        <section
+          id="contributions"
+          data-section-say="here's what anik actually built, broken down layer by layer."
+          style="max-width: 1080px; margin: 0 auto; padding: 16px 24px 40px"
+        >
+          <div class="reveal" style="margin-bottom: 22px">
+            <div
+              style="
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--cyan-500);
+                margin-bottom: 10px;
+              "
+            >
+              // key contributions
+            </div>
+            <h2
+              style="
+                font-family: var(--font-display);
+                font-weight: 700;
+                font-size: clamp(24px, 3.5vw, 36px);
+                letter-spacing: -0.025em;
+                color: var(--fg-1);
+              "
+            >
+              What I built, layer by layer
+            </h2>
+          </div>
+          <div id="contributions-grid" style="display: grid; gap: 16px"></div>
+        </section>
+
+        <!-- ── TECH STACK + IMPACT ── -->
+        <section
+          id="tech-impact"
+          data-section-say="the full stack on the left, and the impact it shipped on the right."
+          style="
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 16px 24px 40px;
+            display: grid;
+            grid-template-columns: 1.25fr 1fr;
+            gap: 36px;
+            align-items: start;
+          "
+        >
+          <div
+            class="reveal"
+            data-mascot-say="every library, framework and tool that went into this — grouped by layer."
+          >
+            <div
+              style="
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--cyan-500);
+                margin-bottom: 16px;
+              "
+            >
+              // tech stack
+            </div>
+            <div
+              id="tech-stack"
+              style="display: flex; flex-direction: column; gap: 14px"
+            ></div>
+          </div>
+          <div
+            class="reveal"
+            data-mascot-say="the outcomes that actually moved the needle for the business."
+          >
+            <div
+              style="
+                font-family: var(--font-mono);
+                font-size: 11px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--cyan-500);
+                margin-bottom: 16px;
+              "
+            >
+              // impact
+            </div>
+            <div
+              id="impact-list"
+              style="display: flex; flex-direction: column; gap: 12px"
+            ></div>
+          </div>
+        </section>
+
+        <!-- ── OTHER DEEP-DIVES ── -->
+        <section
+          id="other-dives"
+          data-section-say="more deep-dives — jump into another flagship project."
+          style="max-width: 1080px; margin: 0 auto; padding: 16px 24px 80px"
+        >
+          <div
+            style="
+              font-family: var(--font-mono);
+              font-size: 11px;
+              letter-spacing: 0.12em;
+              text-transform: uppercase;
+              color: var(--fg-3);
+              margin-bottom: 16px;
+            "
+          >
+            // more deep-dives
+          </div>
+          <div
+            id="others-grid"
+            style="
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 14px;
+            "
+          ></div>
+          <footer
+            style="
+              margin-top: 44px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              flex-wrap: wrap;
+              gap: 12px;
+              font-family: var(--font-mono);
+              font-size: 12px;
+              color: var(--fg-4);
+              border-top: 1px solid var(--border-subtle);
+              padding-top: 24px;
+            "
+          >
+            <a
+              href="index.html"
+              style="color: var(--fg-3); transition: color var(--dur-fast)"
+              onmouseover="this.style.color = 'var(--cyan-400)'"
+              onmouseout="this.style.color = 'var(--fg-3)'"
+              >← back to anik·sarker</a
+            >
+            <span>ach6266@gmail.com · github.com/sarkeranik</span>
+          </footer>
+        </section>
+      </main>
+    </div>
+
+    <script type="module">
+      import { mountMotifs } from "./motifs.js";
+
+      /* ═══════════════════════════════════════════════════
+   PROJECT DATA
+═══════════════════════════════════════════════════ */
+      const PROJECTS = {
+        mira: {
+          cat: "enterprise",
+          category: "Enterprise & SaaS",
+          company: "Sweya AI",
+          shortTitle: "MIRA",
+          title: "MIRA — track, secure & optimize assets in real time",
+          tagline:
+            "A production-grade real-time indoor asset tracking platform for hospitals — live location, role-based access, enterprise-grade security. Led the full-stack build as Technical Lead.",
+          cardSay: "real-time hospital asset tracking — my favourite build",
+          motif: "radar",
+          role: "Technical Lead",
+          duration: "Jan – Jun 2025",
+          live: "https://sweya.ai/products/mira",
+          badges: [
+            ".NET 8",
+            "Clean Architecture",
+            "Angular",
+            "NgRx",
+            "SignalR",
+            "OpenTelemetry",
+            "Docker",
+          ],
+          metrics: [
+            { label: "Architecture", value: "Clean", sub: "4-layer isolation" },
+            { label: "Latency", value: "<1s", sub: "SignalR push" },
+            { label: "Uptime", value: "99.9%", sub: "rolling deploy" },
+            { label: "Tracing", value: "Full", sub: "OTel + Jaeger" },
+          ],
+          overview:
+            "Hospitals lose 20% of productivity to misplaced equipment. MIRA solves this with live indoor asset tracking — nurses see every device's location on a live map, admins manage RBAC per ward, and ops get full-stack distributed tracing. I designed and delivered the entire solution from architecture to production.",
+          owned: [
+            "System architecture from scratch — layering, API contracts, schema, DevOps strategy",
+            "Full-stack delivery: .NET 8 Clean Architecture backend + Angular frontend",
+            "Enterprise security — Zitadel OIDC, multi-tenant RBAC, JWT",
+            "Observability — OpenTelemetry + Jaeger distributed tracing, Serilog",
+          ],
+          lifecycle: [
+            { step: "Client", detail: "Angular dashboard", latency: "" },
+            { step: "Auth", detail: "Zitadel OIDC + JWT", latency: "~12ms" },
+            { step: "API Gateway", detail: "ASP.NET Core", latency: "~5ms" },
+            { step: "CQRS", detail: "MediatR handler", latency: "~8ms" },
+            { step: "SignalR Hub", detail: "live push", latency: "<50ms" },
+            { step: "PostgreSQL", detail: "EF Core query", latency: "~3ms" },
+          ],
+          contribCols: 3,
+          contributions: [
+            {
+              title: "Backend · .NET 8",
+              say: "Clean Architecture, four isolated layers",
+              items: [
+                "Clean Architecture: API → Application → Domain → Infrastructure, strictly isolated",
+                "EF Core + PostgreSQL, SignalR hub for live streaming, Hangfire background jobs",
+                "Zitadel OAuth2/OIDC, JWT auth & multi-tenant RBAC per ward/department",
+                "OpenTelemetry + Jaeger distributed tracing for proactive incident detection",
+              ],
+            },
+            {
+              title: "Frontend · Angular",
+              say: "NgRx, ECharts, live SignalR map",
+              items: [
+                "Modular Angular app with NgRx state & OIDC SSO (Google, Azure AD)",
+                "Rich data viz with ECharts & Syncfusion; live asset positions via SignalR",
+                "Jest unit + Cypress E2E; ESLint/Prettier/Husky pre-commit gates",
+                "Lazy loading, PurgeCSS & progressive loading for cross-browser speed",
+              ],
+            },
+            {
+              title: "DevOps & Ops",
+              say: "zero-downtime rolling updates via Werf",
+              items: [
+                "CI/CD with Werf across dev, test & production",
+                "Containerized deployments with Docker & env-specific configs",
+                "Health monitoring with automated alerting across microservices",
+                "Zero-downtime rolling-update deployment strategy",
+              ],
+            },
+          ],
+          arch: {
+            tiers: [
+              {
+                group: "Angular Frontend",
+                nodes: [
+                  {
+                    id: "dash",
+                    label: "Asset Dashboard",
+                    sub: "NgRx · ECharts",
+                    desc: "Live asset map and analytics dashboard — NgRx state drives filter + sort, ECharts renders occupancy charts.",
+                  },
+                  {
+                    id: "map",
+                    label: "Real-time Map",
+                    sub: "SignalR client",
+                    desc: "SVG floor-plan map updated in real time via the SignalR client. Location dots move as assets move.",
+                  },
+                  {
+                    id: "store",
+                    label: "NgRx Store",
+                    sub: "state management",
+                    desc: "Centralized reactive state — actions, effects, selectors. Asset list, auth, and UI state all flow through here.",
+                  },
+                  {
+                    id: "sigc",
+                    label: "OIDC & SSO",
+                    sub: "Google · Azure AD",
+                    desc: "Single Sign-On with Zitadel — supports Google and Azure AD as identity providers, auto token refresh.",
+                  },
+                ],
+              },
+              {
+                group: "Identity & Security",
+                nodes: [
+                  {
+                    id: "zit",
+                    label: "Zitadel",
+                    sub: "OAuth2 / OIDC",
+                    desc: "Enterprise identity provider — issues JWTs, manages org/user claims, handles SSO federation.",
+                  },
+                  {
+                    id: "rbac",
+                    label: "Multi-tenant RBAC",
+                    sub: "per ward / role",
+                    desc: "Role-based access at ward and department level — each principal carries claims that gate API routes and UI features.",
+                  },
+                ],
+              },
+              {
+                group: "Backend · Clean Architecture",
+                nodes: [
+                  {
+                    id: "api",
+                    label: "API Layer",
+                    sub: "ASP.NET Core",
+                    desc: "Thin controller layer — versioned REST endpoints, Swagger/OpenAPI docs, middleware pipeline.",
+                  },
+                  {
+                    id: "app",
+                    label: "Application",
+                    sub: "CQRS · MediatR",
+                    desc: "Commands and queries handled by MediatR — business rules, validation pipelines, domain service orchestration.",
+                  },
+                  {
+                    id: "dom",
+                    label: "Domain",
+                    sub: "Entities · RBAC",
+                    desc: "Rich domain models: Asset, Location, Zone, Alert. Zero framework dependencies — pure C# business logic.",
+                  },
+                  {
+                    id: "infra",
+                    label: "Infrastructure",
+                    sub: "EF Core · Repos",
+                    desc: "EF Core + PostgreSQL, generic repositories, Hangfire job registration, Serilog sink configuration.",
+                  },
+                ],
+              },
+              {
+                group: "Real-time & Background",
+                nodes: [
+                  {
+                    id: "hub",
+                    label: "SignalR Hub",
+                    sub: "location stream",
+                    desc: "WebSocket hub — pushes location updates to connected Angular clients the moment a sensor event arrives.",
+                  },
+                  {
+                    id: "hang",
+                    label: "Hangfire",
+                    sub: "scheduled jobs",
+                    desc: "Background jobs: stale-asset alerts, nightly reports, notification dispatch, data archival.",
+                  },
+                  {
+                    id: "pg",
+                    label: "PostgreSQL",
+                    sub: "primary DB",
+                    desc: "Primary relational store — asset metadata, zone definitions, location history, audit records.",
+                  },
+                ],
+              },
+              {
+                group: "Observability",
+                nodes: [
+                  {
+                    id: "otel",
+                    label: "OpenTelemetry",
+                    sub: "tracing + metrics",
+                    desc: "Instrumentation SDK — auto-traces HTTP, EF Core and SignalR. Exports spans and metrics to the Jaeger + Prometheus stack.",
+                  },
+                  {
+                    id: "jae",
+                    label: "Jaeger",
+                    sub: "distributed traces",
+                    desc: "Trace backend — visualizes request spans across API, application and infrastructure layers for root-cause analysis.",
+                  },
+                  {
+                    id: "log",
+                    label: "Serilog",
+                    sub: "structured logs",
+                    desc: "Structured log pipeline — JSON output to console (dev) and Seq/Elasticsearch (prod) with enrichers for request context.",
+                  },
+                ],
+              },
+            ],
+            edges: [
+              ["dash", "store"],
+              ["map", "store"],
+              ["sigc", "zit"],
+              ["store", "zit"],
+              ["zit", "rbac"],
+              ["zit", "api"],
+              ["rbac", "api"],
+              ["api", "app"],
+              ["app", "dom"],
+              ["dom", "infra"],
+              ["api", "hub"],
+              ["app", "hang"],
+              ["infra", "pg"],
+              ["hub", "pg"],
+              ["api", "otel"],
+              ["otel", "jae"],
+              ["infra", "log"],
+            ],
+          },
+          tech: [
+            {
+              group: "Frontend",
+              items: ["Angular", "NgRx", "RxJS", "Angular Material"],
+            },
+            { group: "Data Viz", items: ["ECharts", "Syncfusion"] },
+            {
+              group: "Backend",
+              items: [".NET 8", "ASP.NET Core", "MediatR", "Hangfire"],
+            },
+            { group: "Data", items: ["PostgreSQL", "EF Core"] },
+            { group: "Auth", items: ["Zitadel", "OAuth2/OIDC", "JWT", "RBAC"] },
+            { group: "Observe", items: ["OpenTelemetry", "Jaeger", "Serilog"] },
+            { group: "DevOps", items: ["Docker", "Werf", "Jest", "Cypress"] },
+          ],
+          impact: [
+            {
+              metric: "Deployment",
+              result: "Zero-downtime production rollouts with rolling updates",
+            },
+            {
+              metric: "Observability",
+              result: "Full distributed tracing → proactive incident detection",
+            },
+            {
+              metric: "Quality",
+              result: "Jest + Cypress + strict CI/CD gates — no regressions",
+            },
+            {
+              metric: "Domain",
+              result:
+                "Hospital-grade tracking with multi-tenant ward isolation",
+            },
+          ],
+        },
+
+        clappit: {
+          cat: "enterprise",
+          category: "Enterprise SaaS",
+          company: "Sweya AI",
+          shortTitle: "Clappit",
+          title: "Clappit — AI-powered cloud infrastructure SaaS",
+          tagline:
+            "A cloud infra platform to manage, deploy and monitor resources through one interface — with ClappBot, an AI chatbot that deploys via natural language. Founding engineer.",
+          cardSay: "founding engineer · ClappBot drove +70% engagement",
+          motif: "deploy",
+          role: "Founding Engineer",
+          duration: "Aug 2022 – Apr 2023",
+          live: "https://sweya.ai/products/clappit",
+          badges: [
+            ".NET Core",
+            "Angular 17",
+            "Next.js 14",
+            "Nx",
+            "Kubernetes",
+            "Kafka",
+            "ArgoCD",
+            "Rasa AI",
+          ],
+          metrics: [
+            { label: "Engagement", value: "+70%", sub: "post ClappBot" },
+            { label: "Monorepo", value: "Nx", sub: "Angular + Next.js" },
+            { label: "Infra", value: "K8s", sub: "ArgoCD GitOps" },
+            { label: "AI", value: "Rasa", sub: "deploy by NL" },
+          ],
+          overview:
+            "Teams managing cloud infra juggle dozens of tools. Clappit unifies provisioning, monitoring, and deployment through a single platform. As a founding engineer I set the technical direction, defined the monorepo architecture, and built the flagship feature: ClappBot — an AI deployment agent that lets engineers trigger infra changes in plain English.",
+          owned: [
+            "Technical architecture & coding standards from day zero",
+            "Nx monorepo spanning Angular 17 and Next.js 14 with shared libraries",
+            "DDD backend for CI/CD pipeline and cloud deployment management",
+            "ClappBot — AI deployment chatbot on the Rasa platform",
+          ],
+          lifecycle: [
+            {
+              step: "Nx Frontend",
+              detail: "Angular 17 / Next.js",
+              latency: "",
+            },
+            { step: "Auth", detail: "Zitadel OIDC", latency: "~10ms" },
+            { step: "Pipeline API", detail: "DDD .NET Core", latency: "~6ms" },
+            {
+              step: "ClappBot",
+              detail: "Rasa intent parse",
+              latency: "~220ms",
+            },
+            { step: "Kafka", detail: "event stream", latency: "async" },
+            { step: "K8s · ArgoCD", detail: "GitOps deploy", latency: "<30s" },
+          ],
+          contribCols: 2,
+          contributions: [
+            {
+              title: "Frontend · Nx Monorepo",
+              say: "Angular 17 + Next.js 14, shared libs",
+              items: [
+                "Modular Nx monorepo with shared auth, core & UI libraries",
+                "Enterprise OAuth2/OIDC with org/user claims management",
+                "Optimized Nginx (gzip, static caching) + Nx build caching",
+                "Werf-powered CI/CD across dev, staging & production",
+              ],
+            },
+            {
+              title: "Backend · DDD + K8s",
+              say: "GitOps with ArgoCD, self-healing",
+              items: [
+                "DDD layered backend for IFRS pipelines & cloud deployments",
+                "Cloud-native .NET Core, Docker + Kubernetes orchestration",
+                "ArgoCD GitOps — self-healing, automated rollbacks, Helm",
+                "Pipeline management: multi-env, semantic versioning, secret rotation",
+              ],
+            },
+            {
+              title: "Notifications",
+              say: "Kafka + RabbitMQ, Razor templates",
+              items: [
+                "Multi-tenant notification microservice (DDD + CQRS)",
+                "Email / SMS / Push via Razor templates",
+                "Kafka event streaming + RabbitMQ reliable delivery",
+                "EFCoreSecondLevelCache + MessagePack distributed caching",
+              ],
+            },
+            {
+              title: "ClappBot · Rasa AI",
+              say: "deploy by natural language → +70%",
+              items: [
+                "Designed & delivered ClappBot on the Rasa AI platform",
+                "AI intent pipeline interprets deployment commands in plain English",
+                "Executes infra changes & surfaces real-time logs/status in chat",
+                "Drove a measured +70% increase in platform user engagement",
+              ],
+            },
+          ],
+          arch: {
+            tiers: [
+              {
+                group: "Frontend · Nx",
+                nodes: [
+                  {
+                    id: "ng",
+                    label: "Angular 17",
+                    sub: "app shell",
+                    desc: "Main enterprise dashboard — infrastructure overview, deployment history, resource monitoring.",
+                  },
+                  {
+                    id: "next",
+                    label: "Next.js 14",
+                    sub: "marketing + docs",
+                    desc: "SSR marketing site and documentation portal — SEO-optimised, shared design system.",
+                  },
+                  {
+                    id: "lib",
+                    label: "Shared Libs",
+                    sub: "auth · ui · core",
+                    desc: "Nx libraries shared across apps: auth token handling, UI component library, API client generation.",
+                  },
+                ],
+              },
+              {
+                group: "Auth",
+                nodes: [
+                  {
+                    id: "zit",
+                    label: "Zitadel",
+                    sub: "OAuth2 / OIDC",
+                    desc: "Centralised identity — org-level multi-tenancy, user provisioning, API key management for ClappBot.",
+                  },
+                ],
+              },
+              {
+                group: "Backend · .NET",
+                nodes: [
+                  {
+                    id: "pipe",
+                    label: "Pipeline API",
+                    sub: "DDD · MediatR",
+                    desc: "Core deployment and pipeline management — DDD aggregates, CQRS commands, Helm chart templating.",
+                  },
+                  {
+                    id: "notif",
+                    label: "Notification SVC",
+                    sub: "CQRS · events",
+                    desc: "Multi-tenant notification microservice — consumes Kafka events, fans out via email/SMS/push.",
+                  },
+                  {
+                    id: "bot",
+                    label: "ClappBot",
+                    sub: "Rasa AI",
+                    desc: "AI chatbot — Rasa NLU classifies deployment intents, custom actions call Pipeline API to execute changes.",
+                  },
+                ],
+              },
+              {
+                group: "Messaging",
+                nodes: [
+                  {
+                    id: "kafka",
+                    label: "Kafka",
+                    sub: "event stream",
+                    desc: "High-throughput event bus — deployment state changes, audit events, notification triggers all flow through Kafka.",
+                  },
+                  {
+                    id: "rmq",
+                    label: "RabbitMQ",
+                    sub: "reliable delivery",
+                    desc: "Work queue for guaranteed notification delivery — used where exactly-once semantics matter over Kafka.",
+                  },
+                ],
+              },
+              {
+                group: "Data & Infra",
+                nodes: [
+                  {
+                    id: "pg",
+                    label: "PostgreSQL",
+                    sub: "primary DB",
+                    desc: "Primary store — deployment records, pipeline configs, org settings, audit log.",
+                  },
+                  {
+                    id: "redis",
+                    label: "Redis",
+                    sub: "L2 cache",
+                    desc: "EFCoreSecondLevelCache with MessagePack — reduces DB load on hot read paths like resource listings.",
+                  },
+                  {
+                    id: "k8s",
+                    label: "K8s · ArgoCD",
+                    sub: "GitOps",
+                    desc: "Kubernetes cluster managed by ArgoCD — declarative GitOps, automatic self-healing, instant rollback.",
+                  },
+                ],
+              },
+            ],
+            edges: [
+              ["ng", "zit"],
+              ["next", "zit"],
+              ["lib", "zit"],
+              ["zit", "pipe"],
+              ["zit", "notif"],
+              ["bot", "pipe"],
+              ["pipe", "kafka"],
+              ["notif", "kafka"],
+              ["notif", "rmq"],
+              ["pipe", "pg"],
+              ["notif", "redis"],
+              ["kafka", "k8s"],
+              ["pipe", "k8s"],
+            ],
+          },
+          tech: [
+            {
+              group: "Frontend",
+              items: ["Angular 17", "Next.js 14", "Nx", "TypeScript"],
+            },
+            {
+              group: "Backend",
+              items: [".NET Core", "ASP.NET Core", "MediatR"],
+            },
+            { group: "AI", items: ["Rasa Platform"] },
+            { group: "Messaging", items: ["Kafka", "RabbitMQ"] },
+            { group: "Data", items: ["PostgreSQL", "Redis (MessagePack)"] },
+            {
+              group: "DevOps",
+              items: ["Docker", "Kubernetes", "Helm", "ArgoCD", "Werf"],
+            },
+            { group: "Cloud", items: ["AWS", "Azure"] },
+          ],
+          impact: [
+            {
+              metric: "Engagement",
+              result: "+70% following the ClappBot AI chatbot launch",
+            },
+            {
+              metric: "Architecture",
+              result:
+                "Founding engineer — defined monorepo standards used by the whole team",
+            },
+            {
+              metric: "Pipelines",
+              result: "Multi-env dev → staging → prod with auto-rollback",
+            },
+            {
+              metric: "Reach",
+              result:
+                "Served multiple enterprise cloud-infra clients in production",
+            },
+          ],
+        },
+
+        "gsk-expense": {
+          cat: "enterprise",
+          category: "Enterprise · Pharma",
+          company: "Sweya AI · GSK",
+          shortTitle: "GSK Expense",
+          title: "GSK Expense Management — secure, auditable, real-time",
+          tagline:
+            "An enterprise expense-claim platform for GSK — DDD .NET backend, feature-level Casbin RBAC, real-time SignalR notifications, fully auditable for pharma compliance.",
+          cardSay: "Casbin RBAC + SignalR for a pharma giant",
+          motif: "approve",
+          role: "Sr. Software Engineer → Tech Lead",
+          duration: "Apr 2023 – Jan 2025",
+          live: "https://sweya.ai/products/regulatory-ai",
+          badges: [
+            ".NET",
+            "DDD",
+            "CQRS",
+            "Casbin RBAC",
+            "SignalR",
+            "Angular 17",
+            "PrimeNG",
+            "Hangfire",
+          ],
+          metrics: [
+            { label: "Auth Model", value: "Casbin", sub: "feature-level RBAC" },
+            { label: "Real-time", value: "SignalR", sub: "instant approval" },
+            { label: "Audit", value: "100%", sub: "immutable trail" },
+            { label: "Client", value: "GSK", sub: "global pharma" },
+          ],
+          overview:
+            "GSK needed an expense management system that could handle complex multi-level approvals, strict pharma compliance requirements, and real-time workflow notifications — all with a fine-grained permission model that could change without code deployments. I built the complete DDD backend and wired up the real-time notification infrastructure.",
+          owned: [
+            "DDD backend from scratch — domain models, repos, CQRS, infrastructure",
+            "Casbin-powered RBAC with custom CasbinAuthorizeAttribute for feature-level authorization",
+            "SignalR real-time approval/status notification infrastructure",
+            "Audit logging, domain events & Unit of Work patterns for compliance",
+          ],
+          lifecycle: [
+            { step: "Angular 17", detail: "PrimeNG UI", latency: "" },
+            { step: "Zitadel", detail: "OIDC token", latency: "~11ms" },
+            { step: "Casbin", detail: "policy check", latency: "~2ms" },
+            { step: "API", detail: "versioned REST", latency: "~4ms" },
+            { step: "CQRS", detail: "MediatR handler", latency: "~9ms" },
+            { step: "SignalR", detail: "live notify", latency: "<40ms" },
+          ],
+          contribCols: 2,
+          contributions: [
+            {
+              title: "Frontend · Angular 17",
+              say: "PrimeNG, SignalR, RxJS event bus",
+              items: [
+                "Modular feature-based Angular 17 with PrimeNG accessible UI",
+                "Zitadel OIDC with auto token refresh & Casbin RBAC",
+                "Real-time notification engine via SignalR + WebSockets",
+                "RxJS broadcast bus + auto-generated Swagger API clients",
+              ],
+            },
+            {
+              title: "Backend · DDD + Casbin",
+              say: "feature-level RBAC, audit everything",
+              items: [
+                "DDD with CQRS (MediatR) — clean command/query separation",
+                "Casbin RBAC with custom CasbinAuthorizeAttribute on every endpoint",
+                "Zitadel OAuth + JWT + comprehensive audit logging per action",
+                "Unit of Work, generic repos, soft-delete, domain events",
+              ],
+            },
+          ],
+          arch: {
+            tiers: [
+              {
+                group: "Angular 17 Frontend",
+                nodes: [
+                  {
+                    id: "dash",
+                    label: "Dashboard",
+                    sub: "PrimeNG",
+                    desc: "Expense overview for employees and approvers — PrimeNG data tables, charts, notification bell.",
+                  },
+                  {
+                    id: "claim",
+                    label: "Claim Submit",
+                    sub: "form wizard",
+                    desc: "Multi-step claim form with receipt uploads, category codes, policy validation before submission.",
+                  },
+                  {
+                    id: "appr",
+                    label: "Approval Flow",
+                    sub: "multi-level",
+                    desc: "Approval workflow UI — inline approve/reject with comment, timeline view of each claim's journey.",
+                  },
+                  {
+                    id: "notif",
+                    label: "Notifications",
+                    sub: "SignalR client",
+                    desc: "Real-time notification panel — SignalR events pop toasts instantly when a claim changes state.",
+                  },
+                ],
+              },
+              {
+                group: "Auth & Policy",
+                nodes: [
+                  {
+                    id: "zit",
+                    label: "Zitadel",
+                    sub: "OAuth2 / OIDC",
+                    desc: "Identity provider — issues JWTs with role claims used by Casbin to enforce policy decisions.",
+                  },
+                  {
+                    id: "cas",
+                    label: "Casbin RBAC",
+                    sub: "feature-level",
+                    desc: "Policy engine — p,sub,obj,act rules evaluated on every request via CasbinAuthorizeAttribute. No code redeploy needed for policy changes.",
+                  },
+                ],
+              },
+              {
+                group: "Backend · DDD",
+                nodes: [
+                  {
+                    id: "api",
+                    label: "API",
+                    sub: "Versioned · Swagger",
+                    desc: "Thin ASP.NET Core API layer — OpenAPI docs, versioning, global error handling, rate limiting.",
+                  },
+                  {
+                    id: "app",
+                    label: "Application",
+                    sub: "CQRS · MediatR",
+                    desc: "MediatR pipelines — validation, logging, caching decorators wrap every command and query.",
+                  },
+                  {
+                    id: "dom",
+                    label: "Domain",
+                    sub: "Claims · Policies",
+                    desc: "Pure domain: Expense, Approval, Policy aggregates. No EF or HTTP dependencies. Rich invariants enforced here.",
+                  },
+                  {
+                    id: "infra",
+                    label: "Infrastructure",
+                    sub: "EF Core · UoW",
+                    desc: "Unit of Work wrapping EF Core transactions — generic repos, soft-delete conventions, outbox pattern.",
+                  },
+                ],
+              },
+              {
+                group: "Background & Events",
+                nodes: [
+                  {
+                    id: "hang",
+                    label: "Hangfire",
+                    sub: "async jobs",
+                    desc: "Scheduled: reminder emails for pending approvals, monthly reports, policy sync from Casbin.",
+                  },
+                  {
+                    id: "evt",
+                    label: "Domain Events",
+                    sub: "audit trail",
+                    desc: "Every state change raises a domain event — persisted to the immutable audit log and forwarded to SignalR.",
+                  },
+                  {
+                    id: "hub",
+                    label: "SignalR Hub",
+                    sub: "live push",
+                    desc: "WebSocket hub — broadcasts claim state-change events to the relevant approver/submitter connections.",
+                  },
+                ],
+              },
+              {
+                group: "Data",
+                nodes: [
+                  {
+                    id: "pg",
+                    label: "PostgreSQL",
+                    sub: "primary DB",
+                    desc: "Claims, approval chains, policy records, user prefs. Soft-delete preserves compliance history.",
+                  },
+                  {
+                    id: "audit",
+                    label: "Audit Trail",
+                    sub: "immutable",
+                    desc: "Append-only audit table — who did what, when, from which IP. Required for GSK SOX compliance.",
+                  },
+                ],
+              },
+            ],
+            edges: [
+              ["dash", "zit"],
+              ["claim", "zit"],
+              ["appr", "zit"],
+              ["notif", "hub"],
+              ["zit", "cas"],
+              ["zit", "api"],
+              ["cas", "api"],
+              ["api", "app"],
+              ["app", "dom"],
+              ["dom", "infra"],
+              ["api", "hang"],
+              ["api", "evt"],
+              ["api", "hub"],
+              ["infra", "pg"],
+              ["infra", "audit"],
+              ["evt", "audit"],
+            ],
+          },
+          tech: [
+            {
+              group: "Frontend",
+              items: ["Angular 17", "PrimeNG", "RxJS", "TypeScript"],
+            },
+            { group: "Real-time", items: ["SignalR", "WebSockets"] },
+            {
+              group: "Auth",
+              items: ["Zitadel", "OAuth2/OIDC", "JWT", "Casbin RBAC"],
+            },
+            { group: "Backend", items: [".NET", "ASP.NET Core", "MediatR"] },
+            { group: "Data", items: ["PostgreSQL", "EF Core", "Unit of Work"] },
+            { group: "Jobs", items: ["Hangfire"] },
+            { group: "Observe", items: ["OpenTelemetry", "Serilog"] },
+          ],
+          impact: [
+            {
+              metric: "Auditability",
+              result:
+                "Immutable audit trails for every user action — SOX compliant",
+            },
+            {
+              metric: "RBAC",
+              result:
+                "Fine-grained Casbin policies updated without code deployments",
+            },
+            {
+              metric: "Real-time",
+              result:
+                "SignalR eliminated approval delays — instant status propagation",
+            },
+            {
+              metric: "Client",
+              result:
+                "Production-grade for GSK global pharma compliance requirements",
+            },
+          ],
+        },
+
+        "gsk-order": {
+          cat: "enterprise",
+          category: "Enterprise · Pharma",
+          company: "Sweya AI · GSK",
+          shortTitle: "GSK Order",
+          title: "GSK Order Management — event-driven at scale",
+          tagline:
+            "An enterprise order management system orchestrating procurement, fulfilment & approval chains — Kafka-powered event streaming, CQRS, real-time SignalR tracking, Casbin RBAC.",
+          cardSay: "Kafka-driven order management, CQRS end-to-end",
+          motif: "kafka",
+          role: "Sr. Software Engineer → Tech Lead",
+          duration: "Apr 2023 – Jan 2025",
+          live: "https://sweya.ai/products/regulatory-ai",
+          badges: [
+            ".NET",
+            "DDD",
+            "Event-Driven",
+            "Kafka",
+            "CQRS",
+            "SignalR",
+            "Casbin",
+            "ArgoCD",
+          ],
+          metrics: [
+            { label: "Messaging", value: "Kafka", sub: "async order events" },
+            { label: "Architecture", value: "CQRS", sub: "separated R/W" },
+            { label: "Deploy", value: "GitOps", sub: "ArgoCD + K8s" },
+            { label: "Roles", value: "Casbin", sub: "per team scope" },
+          ],
+          overview:
+            "Managing pharmaceutical procurement at GSK means coordinating procurement, fulfilment, and multi-level approvals — often concurrently, across teams with different permissions. I built an event-driven order management system on Kafka, using DDD bounded contexts so each workflow is independently deployable and scalable.",
+          owned: [
+            "DDD layered architecture — bounded contexts, aggregates, domain events",
+            "Kafka event-driven order pipeline for async state transitions across teams",
+            "Casbin RBAC scoped per procurement / approval / fulfilment role",
+            "Docker + Kubernetes + ArgoCD GitOps infrastructure with automated rollback",
+          ],
+          lifecycle: [
+            { step: "Angular", detail: "NgRx UI state", latency: "" },
+            { step: "Auth", detail: "Zitadel + Casbin", latency: "~13ms" },
+            { step: "Order API", detail: "CQRS command", latency: "~5ms" },
+            { step: "Domain", detail: "aggregate update", latency: "~3ms" },
+            { step: "Kafka", detail: "OrderCreated event", latency: "async" },
+            {
+              step: "K8s · ArgoCD",
+              detail: "downstream consumers",
+              latency: "",
+            },
+          ],
+          contribCols: 3,
+          contributions: [
+            {
+              title: "Backend · Event-Driven",
+              say: "Kafka order events, bounded contexts",
+              items: [
+                "Kafka event streaming for decoupled async order state transitions",
+                "DDD with rich models: orders, line items, approvals, fulfilment",
+                "CQRS with MediatR — separated read/write paths for scalability",
+                "Zitadel OIDC + JWT + Casbin RBAC on every command endpoint",
+              ],
+            },
+            {
+              title: "Frontend · Angular",
+              say: "NgRx lifecycle states, live tracking",
+              items: [
+                "Angular + NgRx for complex multi-role order lifecycle state",
+                "Real-time order status updates via SignalR",
+                "Advanced filtering, debounced search & paginated lists",
+                "Optimised views per role: procurement / approver / fulfilment",
+              ],
+            },
+            {
+              title: "Data & Infra",
+              say: "ArgoCD GitOps, automated rollback",
+              items: [
+                "PostgreSQL schema with soft-delete, audit log & domain events",
+                "Docker + Kubernetes, ArgoCD GitOps releases for each environment",
+                "Hangfire for expiry checks, notification dispatch & reporting jobs",
+                "Automated rollback on deployment health-check failure",
+              ],
+            },
+          ],
+          arch: {
+            tiers: [
+              {
+                group: "Angular Frontend",
+                nodes: [
+                  {
+                    id: "dash",
+                    label: "Order Dashboard",
+                    sub: "NgRx",
+                    desc: "Multi-role dashboard — procurement officers, approvers, and fulfilment team each see a scoped view via Casbin claims.",
+                  },
+                  {
+                    id: "appr",
+                    label: "Approval UI",
+                    sub: "workflow",
+                    desc: "Multi-level approval flow — line-manager then finance. Inline approve/reject with required justification field.",
+                  },
+                  {
+                    id: "state",
+                    label: "NgRx + SignalR",
+                    sub: "live state",
+                    desc: "NgRx manages complex order lifecycle state; SignalR pushes order-state events to update the UI in real time.",
+                  },
+                ],
+              },
+              {
+                group: "Auth & Policy",
+                nodes: [
+                  {
+                    id: "zit",
+                    label: "Zitadel",
+                    sub: "OAuth2 / OIDC",
+                    desc: "Issues JWTs carrying role claims — procurement, approver, fulfilment. Claims drive both UI feature flags and API policy.",
+                  },
+                  {
+                    id: "cas",
+                    label: "Casbin RBAC",
+                    sub: "per team scope",
+                    desc: "Policy engine scoped per bounded context — procurement roles cannot see fulfilment data and vice-versa.",
+                  },
+                ],
+              },
+              {
+                group: "Order Service · .NET",
+                nodes: [
+                  {
+                    id: "api",
+                    label: "REST API",
+                    sub: "Versioned",
+                    desc: "Versioned ASP.NET Core API — OpenAPI v2/v3, global error handling, idempotency keys on write endpoints.",
+                  },
+                  {
+                    id: "cqrs",
+                    label: "CQRS",
+                    sub: "MediatR",
+                    desc: "MediatR command/query separation — CreateOrder, ApproveOrder as commands; GetOrdersByStatus as queries.",
+                  },
+                  {
+                    id: "dom",
+                    label: "Domain",
+                    sub: "Orders · Agg.",
+                    desc: "Aggregate roots: Order, OrderLine, ApprovalChain. All invariants enforced here. No EF references.",
+                  },
+                  {
+                    id: "infra",
+                    label: "Infrastructure",
+                    sub: "EF Core · Repos",
+                    desc: "EF Core + PostgreSQL, generic repository pattern, UoW, outbox pattern for reliable domain event dispatch.",
+                  },
+                ],
+              },
+              {
+                group: "Messaging & Jobs",
+                nodes: [
+                  {
+                    id: "kafka",
+                    label: "Kafka",
+                    sub: "order events",
+                    desc: "High-throughput event bus — OrderCreated, OrderApproved, OrderFulfilled published here. Consumers are independent services.",
+                  },
+                  {
+                    id: "rmq",
+                    label: "RabbitMQ",
+                    sub: "notifications",
+                    desc: "Notification queue — guaranteed delivery for approval-request and status-change emails/SMS.",
+                  },
+                  {
+                    id: "hang",
+                    label: "Hangfire",
+                    sub: "jobs",
+                    desc: "Scheduled: order expiry checks, SLA breach alerts, nightly fulfilment summaries, Casbin policy sync.",
+                  },
+                ],
+              },
+              {
+                group: "Data & Infra",
+                nodes: [
+                  {
+                    id: "pg",
+                    label: "PostgreSQL",
+                    sub: "primary DB",
+                    desc: "Order records, approval chains, line items, fulfilment state. Soft-delete preserves full order history.",
+                  },
+                  {
+                    id: "k8s",
+                    label: "Docker · K8s",
+                    sub: "container runtime",
+                    desc: "Order service and notification consumers each run as independent Kubernetes deployments, auto-scaled.",
+                  },
+                  {
+                    id: "argo",
+                    label: "ArgoCD",
+                    sub: "GitOps",
+                    desc: "GitOps deployment — each merged PR to main triggers ArgoCD to diff and sync the cluster state. Instant rollback on failure.",
+                  },
+                ],
+              },
+            ],
+            edges: [
+              ["dash", "zit"],
+              ["appr", "zit"],
+              ["state", "hang"],
+              ["zit", "cas"],
+              ["zit", "api"],
+              ["cas", "api"],
+              ["api", "cqrs"],
+              ["cqrs", "dom"],
+              ["dom", "infra"],
+              ["api", "kafka"],
+              ["api", "rmq"],
+              ["api", "hang"],
+              ["infra", "pg"],
+              ["kafka", "k8s"],
+              ["k8s", "argo"],
+            ],
+          },
+          tech: [
+            {
+              group: "Frontend",
+              items: ["Angular", "NgRx", "RxJS", "TypeScript"],
+            },
+            { group: "Real-time", items: ["SignalR", "WebSockets"] },
+            {
+              group: "Auth",
+              items: ["Zitadel", "OAuth2/OIDC", "JWT", "Casbin RBAC"],
+            },
+            { group: "Backend", items: [".NET", "ASP.NET Core", "MediatR"] },
+            { group: "Messaging", items: ["Kafka", "RabbitMQ"] },
+            { group: "Data", items: ["PostgreSQL", "EF Core", "Unit of Work"] },
+            { group: "DevOps", items: ["Docker", "Kubernetes", "ArgoCD"] },
+          ],
+          impact: [
+            {
+              metric: "Scalability",
+              result:
+                "Kafka-decoupled bounded contexts — each scales independently",
+            },
+            {
+              metric: "Authorization",
+              result:
+                "Casbin RBAC scoped per team role with zero code changes for policy updates",
+            },
+            {
+              metric: "Efficiency",
+              result: "SignalR removed manual order-status polling entirely",
+            },
+            {
+              metric: "Reliability",
+              result:
+                "ArgoCD GitOps with automated rollback on health-check failure",
+            },
+          ],
+        },
+
+        verifid: {
+          cat: "banking",
+          category: "Banking & FinTech",
+          company: "Sweya AI",
+          shortTitle: "VerifID",
+          title: "VerifID — multi-tenant eKYC for banks",
+          tagline:
+            "A white-label digital KYC SaaS platform serving multiple banks — Google Vision AI OCR, document verification, liveness detection, and strict per-bank data isolation on a shared backend.",
+          cardSay: "multi-tenant eKYC — one platform, many banks",
+          motif: "scan",
+          role: "Senior Software Engineer",
+          duration: "2022–2023",
+          live: null,
+          badges: [
+            "Vue.js",
+            ".NET",
+            "Google Vision AI",
+            "OCR",
+            "Multi-tenant",
+            "PostgreSQL",
+          ],
+          metrics: [
+            { label: "Tenants", value: "Multi", sub: "bank-per-config" },
+            { label: "OCR", value: "Vision AI", sub: "Google Cloud" },
+            { label: "Doc Types", value: "NID · PP", sub: "< 60s verify" },
+            { label: "Isolation", value: "RLS", sub: "PostgreSQL" },
+          ],
+          overview:
+            "Banks need digital onboarding but building a KYC stack from scratch is expensive. VerifID is a white-label SaaS where each bank gets its own tenant — custom branding, document workflows, approval configuration — all on a shared backend with strict row-level security. I built the OCR pipeline and multi-tenancy layer.",
+          owned: [
+            "Multi-tenant architecture with per-bank config and PostgreSQL row-level security",
+            "Google Cloud Vision AI integration for NID and passport document OCR",
+            "Verification state machine: capture → OCR → validate → approve/reject/manual-review",
+            "White-label Vue.js frontend with CSS-variable theming per bank",
+          ],
+          lifecycle: [
+            { step: "Vue.js", detail: "bank-branded SPA", latency: "" },
+            { step: "API Gateway", detail: "tenant resolver", latency: "~8ms" },
+            { step: "Auth", detail: "JWT + tenant claim", latency: "~11ms" },
+            { step: "Vision AI", detail: "OCR extraction", latency: "~700ms" },
+            {
+              step: "Verify Engine",
+              detail: "rule evaluation",
+              latency: "~120ms",
+            },
+            { step: "PostgreSQL", detail: "tenant-scoped", latency: "~5ms" },
+          ],
+          contribCols: 2,
+          contributions: [
+            {
+              title: "OCR Verification Pipeline",
+              say: "Vision AI OCR with per-bank configurable rules",
+              items: [
+                "Google Cloud Vision AI for NID & passport field extraction with per-word confidence scores",
+                "Configurable validation rules per bank — required fields, regex formats, confidence thresholds",
+                "Document image pre-processing (contrast, de-skew) before OCR submission",
+                "Fallback-to-manual-review when confidence falls below bank-defined threshold",
+              ],
+            },
+            {
+              title: "Multi-tenant Platform",
+              say: "white-label SaaS, one backend many banks",
+              items: [
+                "Tenant resolver middleware identifies bank from subdomain or JWT claim",
+                "PostgreSQL row-level security — data never crosses tenant boundaries",
+                "White-label Vue.js SPA with CSS custom property theming per bank",
+                "Admin portal for bank operators to review, override decisions, and run compliance reports",
+              ],
+            },
+          ],
+          arch: {
+            tiers: [
+              {
+                group: "Vue.js Frontend",
+                nodes: [
+                  {
+                    id: "app",
+                    label: "Bank-themed App",
+                    sub: "Vue.js",
+                    desc: "White-label SPA — each bank gets a subdomain with custom logo, colors and document-type workflow via CSS custom properties.",
+                  },
+                  {
+                    id: "kyc",
+                    label: "KYC Wizard",
+                    sub: "step-by-step",
+                    desc: "Multi-step capture wizard: document type → photo capture → liveness check → submission confirmation.",
+                  },
+                  {
+                    id: "adm",
+                    label: "Admin Portal",
+                    sub: "operator review",
+                    desc: "Bank-operator dashboard — view submissions, override decisions, export compliance reports.",
+                  },
+                ],
+              },
+              {
+                group: "Auth & Tenant",
+                nodes: [
+                  {
+                    id: "gw",
+                    label: "API Gateway",
+                    sub: "tenant router",
+                    desc: "Routes each request to the correct tenant context. Reads bank identifier from subdomain or Authorization header.",
+                  },
+                  {
+                    id: "auth",
+                    label: "Auth Service",
+                    sub: "JWT + tenant",
+                    desc: "Issues signed JWTs carrying tenant_id and role claims. All downstream services validate tenant before serving data.",
+                  },
+                ],
+              },
+              {
+                group: "Verification Services",
+                nodes: [
+                  {
+                    id: "vis",
+                    label: "Vision AI OCR",
+                    sub: "Google Cloud",
+                    desc: "Calls Cloud Vision API with the pre-processed image. Returns structured field data with per-field confidence scores.",
+                  },
+                  {
+                    id: "ver",
+                    label: "Verify Engine",
+                    sub: "rule evaluation",
+                    desc: "Applies tenant-specific rules to OCR output — required fields, regex formats, thresholds. Emits pass/fail/manual-review.",
+                  },
+                  {
+                    id: "live",
+                    label: "Liveness Check",
+                    sub: "face detection",
+                    desc: "Liveness probe and face-match between captured selfie and document photo to prevent spoofing.",
+                  },
+                ],
+              },
+              {
+                group: "Data",
+                nodes: [
+                  {
+                    id: "pg",
+                    label: "PostgreSQL",
+                    sub: "tenant-scoped RLS",
+                    desc: "Row-level security policies ensure each bank's applications are invisible to other tenants' queries.",
+                  },
+                  {
+                    id: "store",
+                    label: "Doc Storage",
+                    sub: "encrypted blobs",
+                    desc: "Encrypted document store with per-bank retention policy. Images purged on schedule after the compliance window.",
+                  },
+                ],
+              },
+            ],
+            edges: [
+              ["app", "gw"],
+              ["kyc", "gw"],
+              ["adm", "gw"],
+              ["gw", "auth"],
+              ["auth", "vis"],
+              ["auth", "ver"],
+              ["vis", "ver"],
+              ["ver", "live"],
+              ["ver", "pg"],
+              ["vis", "store"],
+            ],
+          },
+          tech: [
+            { group: "Frontend", items: ["Vue.js", "Vuex"] },
+            { group: "Backend", items: [".NET", "ASP.NET Core"] },
+            { group: "AI / Vision", items: ["Google Cloud Vision AI", "OCR"] },
+            { group: "Auth", items: ["JWT", "Multi-tenant claims"] },
+            {
+              group: "Data",
+              items: ["PostgreSQL (RLS)", "Encrypted Blob Storage"],
+            },
+          ],
+          impact: [
+            {
+              metric: "Scale",
+              result:
+                "Single platform serving multiple banks with full per-tenant data isolation",
+            },
+            {
+              metric: "Automation",
+              result:
+                "Vision AI OCR reduced manual data entry to near-zero for most applications",
+            },
+            {
+              metric: "Onboarding",
+              result:
+                "Digital paperless KYC replacing manual bank-branch visits",
+            },
+            {
+              metric: "Compliance",
+              result:
+                "Per-bank configurable validation rules without code deployments",
+            },
+          ],
+        },
+
+        "dhaka-bank": {
+          cat: "banking",
+          category: "Banking & FinTech",
+          company: "LEADS Corporation · Dhaka Bank",
+          shortTitle: "EZYBANK",
+          title: "EZYBANK — digital onboarding for Dhaka Bank",
+          tagline:
+            "A full eKYC digital account-opening platform for Dhaka Bank — NID OCR, biometric liveness, face matching, RabbitMQ async events, and a core banking adapter writing results to Oracle.",
+          cardSay: "EZYBANK — biometric onboarding, days to minutes",
+          motif: "scan",
+          role: "Software Engineer",
+          duration: "2020–2021",
+          live: null,
+          badges: [
+            "Vue.js",
+            ".NET Core",
+            "OCR",
+            "Biometric",
+            "RabbitMQ",
+            "Oracle DB",
+          ],
+          metrics: [
+            { label: "Onboarding", value: "Minutes", sub: "was days" },
+            { label: "Biometric", value: "Liveness", sub: "anti-spoof" },
+            { label: "Events", value: "RabbitMQ", sub: "async notify" },
+            { label: "Core DB", value: "Oracle", sub: "banking system" },
+          ],
+          overview:
+            "Opening a bank account at Dhaka Bank took days of branch visits and paperwork. EZYBANK replaced this entirely — applicants complete the full process online: NID capture via OCR, liveness check, face-match against the document, and the verified result flows into the Oracle core banking system via a dedicated adapter. I built the OCR pipeline, biometric integration, and async event bus.",
+          owned: [
+            "NID OCR pipeline with field extraction and validation",
+            "Biometric liveness detection and face-match against document photo",
+            "RabbitMQ event bus for async notification and core banking integration",
+            "Vue.js guided capture wizard with real-time status tracking",
+          ],
+          lifecycle: [
+            { step: "Vue.js", detail: "capture wizard", latency: "" },
+            { step: "API Gateway", detail: ".NET Core", latency: "~9ms" },
+            {
+              step: "OCR Service",
+              detail: "NID extraction",
+              latency: "~600ms",
+            },
+            { step: "Biometric", detail: "liveness + face", latency: "~400ms" },
+            { step: "RabbitMQ", detail: "async event", latency: "async" },
+            {
+              step: "Oracle DB",
+              detail: "core banking write",
+              latency: "~15ms",
+            },
+          ],
+          contribCols: 2,
+          contributions: [
+            {
+              title: "OCR & Biometric",
+              say: "NID OCR + liveness + face match",
+              items: [
+                "NID document OCR with field extraction: name, DOB, ID number, address",
+                "Biometric liveness detection to prevent photo-spoofing attacks",
+                "Face matching between live selfie and NID photo with confidence scoring",
+                "Pre-processing pipeline handling varying lighting and scan quality",
+              ],
+            },
+            {
+              title: "Integration & Events",
+              say: "RabbitMQ async → Oracle core banking",
+              items: [
+                "RabbitMQ event bus for decoupled async notification dispatch",
+                "Oracle adapter translates KYC result to core banking account-open schema",
+                "Retry logic with idempotency key to prevent duplicate account creation",
+                "Real-time status tracking with polling for applicant UI updates",
+              ],
+            },
+          ],
+          arch: {
+            tiers: [
+              {
+                group: "Vue.js Frontend",
+                nodes: [
+                  {
+                    id: "app",
+                    label: "EZYBANK Web",
+                    sub: "Vue.js",
+                    desc: "Guided wizard — NID photo capture, selfie, document review, submission confirmation.",
+                  },
+                  {
+                    id: "bio",
+                    label: "Biometric Capture",
+                    sub: "camera API",
+                    desc: "Browser-based camera capture for liveness frames and selfie photo using the browser Media API.",
+                  },
+                  {
+                    id: "track",
+                    label: "Status Tracker",
+                    sub: "polling",
+                    desc: "Shows current step in the approval chain; polls the API for state changes.",
+                  },
+                ],
+              },
+              {
+                group: "API Layer",
+                nodes: [
+                  {
+                    id: "gw",
+                    label: "API Gateway",
+                    sub: ".NET Core",
+                    desc: "Routes capture, OCR, biometric, and status requests. Validates JWT and rate-limits per application.",
+                  },
+                  {
+                    id: "auth",
+                    label: "Auth Service",
+                    sub: "JWT",
+                    desc: "Issues JWTs for applicant sessions. Validates token on every request before forwarding downstream.",
+                  },
+                ],
+              },
+              {
+                group: "KYC Services",
+                nodes: [
+                  {
+                    id: "ocr",
+                    label: "OCR Service",
+                    sub: "NID extraction",
+                    desc: "Extracts structured data from NID image — name, DOB, ID number, address, photo thumbnail.",
+                  },
+                  {
+                    id: "face",
+                    label: "Face Match",
+                    sub: "liveness · match",
+                    desc: "Liveness detection (blink/head-turn) and cosine-similarity face match between selfie and NID photo.",
+                  },
+                  {
+                    id: "core",
+                    label: "Core Banking Adapter",
+                    sub: "Oracle bridge",
+                    desc: "Translates verified KYC payload to Oracle account-open schema with retry on transient failure.",
+                  },
+                ],
+              },
+              {
+                group: "Messaging & Data",
+                nodes: [
+                  {
+                    id: "rabbit",
+                    label: "RabbitMQ",
+                    sub: "async events",
+                    desc: "KYCCompleted, AccountCreated, NotificationRequested messages fan out to downstream consumers.",
+                  },
+                  {
+                    id: "oracle",
+                    label: "Oracle DB",
+                    sub: "core banking",
+                    desc: "Dhaka Bank's Oracle RDBMS — EZYBANK writes final account records here via the adapter.",
+                  },
+                ],
+              },
+            ],
+            edges: [
+              ["app", "gw"],
+              ["bio", "gw"],
+              ["track", "gw"],
+              ["gw", "auth"],
+              ["auth", "ocr"],
+              ["auth", "face"],
+              ["ocr", "rabbit"],
+              ["face", "rabbit"],
+              ["rabbit", "core"],
+              ["core", "oracle"],
+              ["ocr", "oracle"],
+            ],
+          },
+          tech: [
+            {
+              group: "Frontend",
+              items: ["Vue.js", "Vuex", "Browser Media API"],
+            },
+            { group: "Backend", items: [".NET Core", "ASP.NET Core"] },
+            {
+              group: "KYC",
+              items: ["OCR", "Face Recognition", "Liveness Detection"],
+            },
+            { group: "Messaging", items: ["RabbitMQ"] },
+            { group: "Data", items: ["Oracle Database"] },
+            { group: "Auth", items: ["JWT"] },
+          ],
+          impact: [
+            {
+              metric: "Speed",
+              result: "Account opening reduced from days to minutes",
+            },
+            {
+              metric: "Security",
+              result:
+                "Liveness detection prevents photo-spoofing; face-match ensures identity",
+            },
+            {
+              metric: "Integration",
+              result:
+                "Seamless bridge to Oracle core banking — no manual re-keying",
+            },
+            {
+              metric: "Experience",
+              result:
+                "Fully digital — no branch visit required for new accounts",
+            },
+          ],
+        },
+
+        "ipdc-finance": {
+          cat: "banking",
+          category: "Banking & FinTech",
+          company: "LEADS Corporation · IPDC Finance",
+          shortTitle: "IPDC eKYC",
+          title: "IPDC Finance — intelligent eKYC with NLP",
+          tagline:
+            "Digital eKYC for IPDC Finance — NLP-powered OCR field extraction, Google Vision AI, liveness + face-match, Ocelot API gateway, and sub-5-minute digital onboarding.",
+          cardSay: "NID OCR + NLP + face-match — under 5 minutes",
+          motif: "scan",
+          role: "Software Engineer",
+          duration: "2020–2021",
+          live: null,
+          badges: [
+            "Vue.js",
+            ".NET",
+            "Ocelot",
+            "Google Vision",
+            "NLP",
+            "Liveness",
+            "PostgreSQL",
+          ],
+          metrics: [
+            { label: "Onboarding", value: "< 5 min", sub: "digital KYC" },
+            { label: "Gateway", value: "Ocelot", sub: "API routing" },
+            { label: "Extraction", value: "NLP+OCR", sub: "semantic parse" },
+            { label: "Checks", value: "4-layer", sub: "OCR+NLP+live+face" },
+          ],
+          overview:
+            "IPDC Finance's compliance requirements demanded that extracted data be semantically validated, not just pattern-matched. I built a pipeline layering Google Vision AI OCR with an NLP post-processor to interpret and normalise extracted fields, combined with liveness and face-match — all behind an Ocelot API gateway — for a complete sub-5-minute digital onboarding experience.",
+          owned: [
+            "Ocelot API gateway — service routing, rate limiting, JWT middleware pipeline",
+            "Vision AI OCR + NLP post-processing for semantic field normalisation",
+            "Liveness detection and face-match verification layer",
+            "Sub-5-minute end-to-end digital onboarding flow in Vue.js",
+          ],
+          lifecycle: [
+            { step: "Vue.js", detail: "capture wizard", latency: "" },
+            { step: "Ocelot", detail: "API gateway", latency: "~7ms" },
+            { step: "Vision AI", detail: "OCR extraction", latency: "~650ms" },
+            { step: "NLP Engine", detail: "field parsing", latency: "~200ms" },
+            {
+              step: "Liveness+Face",
+              detail: "verification",
+              latency: "~380ms",
+            },
+            { step: "PostgreSQL", detail: "store result", latency: "~4ms" },
+          ],
+          contribCols: 2,
+          contributions: [
+            {
+              title: "OCR + NLP Pipeline",
+              say: "semantic extraction — beyond raw pattern matching",
+              items: [
+                "Google Vision AI for initial text extraction from NID / passport images",
+                "NLP post-processing to interpret, normalise, and validate fields semantically",
+                "Named entity recognition for names, dates, and ID numbers with fuzzy matching",
+                "Dual confidence scoring at both OCR and NLP layers — failures trigger manual review",
+              ],
+            },
+            {
+              title: "Gateway & Verification",
+              say: "Ocelot gateway + 4-layer verification",
+              items: [
+                "Ocelot API gateway — service discovery, JWT validation, rate limiting, logging",
+                "Liveness detection (challenge-response) + face-match against document photo",
+                "End-to-end audit trail — every verification step persisted with timestamp and score",
+                "Vue.js SPA with real-time step feedback and error recovery prompts",
+              ],
+            },
+          ],
+          arch: {
+            tiers: [
+              {
+                group: "Vue.js Frontend",
+                nodes: [
+                  {
+                    id: "app",
+                    label: "IPDC Web App",
+                    sub: "Vue.js",
+                    desc: "Capture wizard — document type → NID capture → selfie → liveness → review → submission.",
+                  },
+                  {
+                    id: "panel",
+                    label: "Review Panel",
+                    sub: "officer UI",
+                    desc: "Compliance officer panel — view OCR + NLP output, approve/reject with immutable audit trail.",
+                  },
+                ],
+              },
+              {
+                group: "API Gateway",
+                nodes: [
+                  {
+                    id: "oct",
+                    label: "Ocelot Gateway",
+                    sub: "routing · auth",
+                    desc: "JWT validation, rate limiting, service discovery — routes requests to OCR, NLP, and verification microservices.",
+                  },
+                ],
+              },
+              {
+                group: "KYC Pipeline",
+                nodes: [
+                  {
+                    id: "vis",
+                    label: "Vision OCR",
+                    sub: "Google Cloud",
+                    desc: "Extracts raw text regions with bounding boxes and per-word confidence scores from document images.",
+                  },
+                  {
+                    id: "nlp",
+                    label: "NLP Engine",
+                    sub: "field parsing",
+                    desc: "NER for names/dates, normalisation, fuzzy matching for noisy scans — raises semantic confidence above raw OCR alone.",
+                  },
+                  {
+                    id: "live",
+                    label: "Liveness Check",
+                    sub: "challenge-response",
+                    desc: "Prompt-based liveness — blink, turn head. Validates response frames to prove physical presence.",
+                  },
+                  {
+                    id: "face",
+                    label: "Face Match",
+                    sub: "selfie · doc",
+                    desc: "Cosine similarity of face embeddings between selfie and document photo — above threshold → identity confirmed.",
+                  },
+                ],
+              },
+              {
+                group: "Data",
+                nodes: [
+                  {
+                    id: "pg",
+                    label: "PostgreSQL",
+                    sub: "audit + results",
+                    desc: "Stores KYC applications, per-step scores, officer decisions, and immutable audit log.",
+                  },
+                  {
+                    id: "store",
+                    label: "Document Store",
+                    sub: "encrypted",
+                    desc: "Encrypted blob storage for NID images, selfies, and liveness clips with IPDC retention policy.",
+                  },
+                ],
+              },
+            ],
+            edges: [
+              ["app", "oct"],
+              ["panel", "oct"],
+              ["oct", "vis"],
+              ["oct", "nlp"],
+              ["vis", "nlp"],
+              ["nlp", "live"],
+              ["live", "face"],
+              ["face", "pg"],
+              ["vis", "store"],
+            ],
+          },
+          tech: [
+            { group: "Frontend", items: ["Vue.js", "Vuex"] },
+            { group: "Gateway", items: ["Ocelot"] },
+            { group: "Backend", items: [".NET", "ASP.NET Core"] },
+            {
+              group: "AI",
+              items: ["Google Vision AI", "NLP", "Face Recognition"],
+            },
+            { group: "Data", items: ["PostgreSQL", "Encrypted Blob Store"] },
+          ],
+          impact: [
+            {
+              metric: "Speed",
+              result: "Sub-5-minute full KYC from document capture to decision",
+            },
+            {
+              metric: "Accuracy",
+              result:
+                "NLP layer reduced false-positives vs raw OCR pattern-matching alone",
+            },
+            {
+              metric: "Compliance",
+              result:
+                "Immutable per-step audit trail satisfies regulatory requirements",
+            },
+            {
+              metric: "Security",
+              result: "4-layer checks: OCR + NLP + liveness + face-match",
+            },
+          ],
+        },
+
+        "southeast-bank": {
+          cat: "banking",
+          category: "Banking & FinTech",
+          company: "LEADS Corporation · Southeast Bank",
+          shortTitle: "SEB eKYC",
+          title: "Southeast Bank — eKYC on Oracle",
+          tagline:
+            "Digital eKYC for Southeast Bank — NID and passport OCR, face matching, and a .NET backend writing verified identity data directly into the existing Oracle core banking system.",
+          cardSay: "face-match onboarding writing to Oracle core banking",
+          motif: "scan",
+          role: "Software Engineer",
+          duration: "2020–2021",
+          live: null,
+          badges: [
+            "Vue.js",
+            ".NET",
+            "Oracle DB",
+            "OCR",
+            "Face Match",
+            "PostgreSQL audit",
+          ],
+          metrics: [
+            { label: "Core DB", value: "Oracle", sub: "banking system" },
+            { label: "Identity", value: "Face Match", sub: "doc vs selfie" },
+            { label: "Docs", value: "NID + PP", sub: "multi-doc OCR" },
+            { label: "Audit", value: "100%", sub: "immutable trail" },
+          ],
+          overview:
+            "Southeast Bank's core system runs on Oracle. The challenge was building a modern digital KYC layer that slots into existing infrastructure without disrupting live operations. I built the OCR + face-match pipeline and an Oracle adapter that writes verified account data directly into the core banking system, with an independent PostgreSQL audit log for compliance.",
+          owned: [
+            "Multi-document OCR pipeline — NID (front & back) and passport",
+            "Face matching between live selfie and document photo with threshold-based decision",
+            "Oracle core banking adapter with idempotency key to prevent duplicate records",
+            "Vue.js onboarding frontend with guided capture and real-time status tracking",
+          ],
+          lifecycle: [
+            { step: "Vue.js", detail: "capture UI", latency: "" },
+            { step: "API", detail: ".NET Core", latency: "~8ms" },
+            {
+              step: "OCR Engine",
+              detail: "document extract",
+              latency: "~550ms",
+            },
+            { step: "Face Match", detail: "identity check", latency: "~320ms" },
+            {
+              step: "Oracle Adapter",
+              detail: "record write",
+              latency: "~15ms",
+            },
+            { step: "Oracle DB", detail: "core banking", latency: "~12ms" },
+          ],
+          contribCols: 2,
+          contributions: [
+            {
+              title: "OCR & Face Match",
+              say: "multi-doc OCR + face match on Oracle stack",
+              items: [
+                "Multi-document OCR — NID (both sides) and passport with configurable required fields",
+                "Image quality validation before OCR — rejects blurred or glare-affected captures",
+                "Face matching: document photo vs selfie with threshold-based pass/fail/manual-review",
+                "Field-level confidence scoring — partial pass triggers selective manual review",
+              ],
+            },
+            {
+              title: "Oracle Integration",
+              say: "writes KYC results into live Oracle core banking",
+              items: [
+                "Oracle adapter translating KYC result to SEB core banking account-open schema",
+                "Idempotency key prevents duplicate account creation on retry",
+                "Independent PostgreSQL audit log decoupled from Oracle for regulatory access",
+                "Vue.js SPA with doc-type selector, guided capture, and submission status",
+              ],
+            },
+          ],
+          arch: {
+            tiers: [
+              {
+                group: "Vue.js Frontend",
+                nodes: [
+                  {
+                    id: "app",
+                    label: "SEB Web App",
+                    sub: "Vue.js",
+                    desc: "Document-type selector, guided NID/passport capture, selfie capture, and submission status.",
+                  },
+                  {
+                    id: "status",
+                    label: "Status Dashboard",
+                    sub: "applicant view",
+                    desc: "Real-time application status — OCR result, face-match decision, core banking write confirmation.",
+                  },
+                ],
+              },
+              {
+                group: "API Layer",
+                nodes: [
+                  {
+                    id: "api",
+                    label: "API",
+                    sub: ".NET Core",
+                    desc: "Routes capture, OCR, face-match, and adapter requests. Validates JWT on every endpoint.",
+                  },
+                  {
+                    id: "auth",
+                    label: "Auth",
+                    sub: "JWT",
+                    desc: "Session-based JWT for applicants. Allows re-entry to incomplete applications via token refresh.",
+                  },
+                ],
+              },
+              {
+                group: "KYC Services",
+                nodes: [
+                  {
+                    id: "ocr",
+                    label: "OCR Engine",
+                    sub: "multi-doc",
+                    desc: "Extracts fields from NID (front+back) and passport. Configurable required fields per SEB compliance rules.",
+                  },
+                  {
+                    id: "face",
+                    label: "Face Match",
+                    sub: "selfie · doc",
+                    desc: "Face embedding comparison between selfie and document photo. Confidence ≥ threshold → identity confirmed.",
+                  },
+                  {
+                    id: "oradapt",
+                    label: "Oracle Adapter",
+                    sub: "core banking",
+                    desc: "Translates verified KYC to Oracle account-open schema with idempotency to prevent duplicate records.",
+                  },
+                ],
+              },
+              {
+                group: "Data",
+                nodes: [
+                  {
+                    id: "oracle",
+                    label: "Oracle Database",
+                    sub: "core banking",
+                    desc: "Southeast Bank Oracle RDBMS — completed KYC records written here for account activation.",
+                  },
+                  {
+                    id: "audit",
+                    label: "Audit Log",
+                    sub: "PostgreSQL",
+                    desc: "Independent append-only audit log — every OCR, face-match, and Oracle write with timestamp and actor.",
+                  },
+                ],
+              },
+            ],
+            edges: [
+              ["app", "api"],
+              ["status", "api"],
+              ["api", "auth"],
+              ["auth", "ocr"],
+              ["auth", "face"],
+              ["ocr", "face"],
+              ["face", "oradapt"],
+              ["oradapt", "oracle"],
+              ["ocr", "audit"],
+              ["face", "audit"],
+              ["oradapt", "audit"],
+            ],
+          },
+          tech: [
+            { group: "Frontend", items: ["Vue.js", "Vuex"] },
+            { group: "Backend", items: [".NET", "ASP.NET Core"] },
+            { group: "KYC", items: ["OCR", "Face Recognition"] },
+            { group: "Data", items: ["Oracle Database", "PostgreSQL (audit)"] },
+            { group: "Auth", items: ["JWT"] },
+          ],
+          impact: [
+            {
+              metric: "Integration",
+              result:
+                "Seamless write into live Oracle core banking with zero service downtime",
+            },
+            {
+              metric: "Accuracy",
+              result:
+                "Multi-doc OCR with face-match prevents identity fraud at onboarding",
+            },
+            {
+              metric: "Compliance",
+              result:
+                "Independent PostgreSQL audit log decoupled from Oracle for regulators",
+            },
+            {
+              metric: "Experience",
+              result: "Full digital account opening without a branch visit",
+            },
+          ],
+        },
+
+        apex: {
+          cat: "ecommerce",
+          category: "E-Commerce",
+          company: "Brain Station 23 · Apex Footwear",
+          shortTitle: "Apex",
+          title: "Apex Footwear — 100k+ weekly visitor storefront",
+          tagline:
+            "High-traffic nopCommerce storefront for Bangladesh's largest shoe retailer — Redis distributed caching, AWS EC2 auto-scaling, Facebook Catalog API sync, 100k+ weekly visitors.",
+          cardSay: "100k+ weekly visitors on nopCommerce + Redis cache",
+          motif: "cart",
+          role: "Software Engineer",
+          duration: "Brain Station 23",
+          live: "https://apex.com.bd",
+          badges: [
+            "nopCommerce",
+            ".NET",
+            "Redis",
+            "AWS",
+            "Facebook API",
+            "SQL Server",
+          ],
+          metrics: [
+            { label: "Traffic", value: "100k+", sub: "weekly visitors" },
+            { label: "Cache", value: "Redis", sub: "sub-ms reads" },
+            { label: "Scale", value: "AWS", sub: "auto-scaling" },
+            { label: "Social", value: "FB API", sub: "catalog sync" },
+          ],
+          overview:
+            "Apex Footwear is Bangladesh's largest shoe retailer. Their e-commerce site handles over 100k weekly visitors across product catalog, search, cart, and checkout. I built the performance and integration layer: Redis caching to cut DB load on hot catalog reads, AWS auto-scaling for traffic spikes, and Facebook Catalog API sync for dynamic product ads.",
+          owned: [
+            "Redis distributed caching for product catalog, search results, and category pages",
+            "AWS EC2 auto-scaling group configuration for peak-traffic events",
+            "Facebook Catalog API integration for dynamic product ad synchronisation",
+            "Custom nopCommerce .NET plugins for business rules, promotions, and ERP sync",
+          ],
+          lifecycle: [
+            { step: "Browser", detail: "static → CDN", latency: "" },
+            { step: "CloudFront", detail: "CDN + WAF", latency: "~8ms" },
+            { step: "AWS ALB", detail: "load balancer", latency: "~3ms" },
+            { step: "nopCommerce", detail: ".NET engine", latency: "~25ms" },
+            { step: "Redis", detail: "L2 cache hit", latency: "< 1ms" },
+            { step: "SQL Server", detail: "cache miss", latency: "~18ms" },
+          ],
+          contribCols: 2,
+          contributions: [
+            {
+              title: "Performance & Caching",
+              say: "Redis L2 cuts DB load on hot catalog reads",
+              items: [
+                "Redis distributed cache for product listings, category pages, and search results",
+                "Tag-based cache invalidation on product/price updates — no stale data",
+                "CloudFront CDN for all static assets — images, JS, CSS served from edge",
+                "AWS ALB + EC2 auto-scaling group for peak and seasonal traffic",
+              ],
+            },
+            {
+              title: "Integrations & Plugins",
+              say: "Facebook Catalog API + custom .NET plugins",
+              items: [
+                "Facebook Catalog API — auto-syncs product catalog for dynamic FB & Instagram ads",
+                "Custom nopCommerce plugins for Bangladeshi payment gateways and promotions",
+                "ERP product import pipeline via scheduled background jobs",
+                "SEO optimisations — canonical URLs, structured data, sitemap generation",
+              ],
+            },
+          ],
+          arch: {
+            tiers: [
+              {
+                group: "Client & CDN",
+                nodes: [
+                  {
+                    id: "browser",
+                    label: "Browser",
+                    sub: "shopper",
+                    desc: "End-user browser — static assets from CloudFront edge; dynamic pages from nopCommerce.",
+                  },
+                  {
+                    id: "cf",
+                    label: "CloudFront CDN",
+                    sub: "edge + WAF",
+                    desc: "Caches images, CSS, JS at 100+ edge locations. WAF blocks malicious traffic before it hits origin.",
+                  },
+                ],
+              },
+              {
+                group: "AWS Infrastructure",
+                nodes: [
+                  {
+                    id: "alb",
+                    label: "AWS ALB",
+                    sub: "load balancer",
+                    desc: "Application Load Balancer distributes traffic across the auto-scaling EC2 fleet.",
+                  },
+                  {
+                    id: "ec2",
+                    label: "EC2 Auto-scaling",
+                    sub: "nopCommerce fleet",
+                    desc: "Auto-scaling group — scales out on CPU > 70% or request-queue depth. Handles seasonal spikes.",
+                  },
+                ],
+              },
+              {
+                group: "Application",
+                nodes: [
+                  {
+                    id: "nc",
+                    label: "nopCommerce",
+                    sub: ".NET engine",
+                    desc: "Core e-commerce engine — product catalog, cart, checkout, order management.",
+                  },
+                  {
+                    id: "plugin",
+                    label: "Custom Plugins",
+                    sub: ".NET / C#",
+                    desc: "Custom .NET plugins: Bangladeshi payment gateways, promotions, ERP sync, Facebook Catalog.",
+                  },
+                ],
+              },
+              {
+                group: "Cache & External",
+                nodes: [
+                  {
+                    id: "redis",
+                    label: "Redis",
+                    sub: "L2 cache",
+                    desc: "Distributed L2 cache — product listings, category pages, search results. Tag-based invalidation on catalog updates.",
+                  },
+                  {
+                    id: "fb",
+                    label: "Facebook Catalog API",
+                    sub: "ad sync",
+                    desc: "Syncs product catalog to Facebook Business Manager for dynamic product ads and Instagram shopping.",
+                  },
+                ],
+              },
+              {
+                group: "Data",
+                nodes: [
+                  {
+                    id: "sql",
+                    label: "SQL Server",
+                    sub: "primary DB",
+                    desc: "nopCommerce primary database — products, customers, orders, inventory. Redis sits in front of hot read paths.",
+                  },
+                ],
+              },
+            ],
+            edges: [
+              ["browser", "cf"],
+              ["cf", "alb"],
+              ["alb", "ec2"],
+              ["ec2", "nc"],
+              ["nc", "plugin"],
+              ["nc", "redis"],
+              ["redis", "sql"],
+              ["plugin", "fb"],
+              ["plugin", "sql"],
+            ],
+          },
+          tech: [
+            {
+              group: "Platform",
+              items: ["nopCommerce", ".NET", "ASP.NET MVC"],
+            },
+            { group: "Cache", items: ["Redis"] },
+            { group: "Cloud", items: ["AWS EC2", "AWS ALB", "CloudFront CDN"] },
+            { group: "External APIs", items: ["Facebook Catalog API"] },
+            { group: "Data", items: ["SQL Server"] },
+          ],
+          impact: [
+            {
+              metric: "Traffic",
+              result:
+                "100k+ weekly visitors handled reliably with AWS auto-scaling",
+            },
+            {
+              metric: "Performance",
+              result:
+                "Redis cache significantly cut catalog page DB load on hot reads",
+            },
+            {
+              metric: "Reach",
+              result:
+                "Facebook Catalog API enabled dynamic ads across FB & Instagram",
+            },
+            {
+              metric: "Reliability",
+              result:
+                "Auto-scaling handled seasonal spikes without page degradation",
+            },
+          ],
+        },
+
+        shwapno: {
+          cat: "ecommerce",
+          category: "E-Commerce",
+          company: "Brain Station 23 · ACI Logistics",
+          shortTitle: "Shwapno",
+          title: "Shwapno — grocery e-commerce at scale",
+          tagline:
+            "High-availability grocery e-commerce for Shwapno (Bangladesh's largest superchain) — nopCommerce, AWS auto-scaling, Redis real-time stock availability, 10k+ concurrent users.",
+          cardSay: "grocery e-commerce at scale — 10k+ concurrent users",
+          motif: "cart",
+          role: "Software Engineer",
+          duration: "Brain Station 23",
+          live: "https://www.shwapno.com",
+          badges: [
+            "nopCommerce",
+            ".NET",
+            "AWS",
+            "Redis",
+            "SQL Server",
+            "Auto-scaling",
+          ],
+          metrics: [
+            { label: "Concurrency", value: "10k+", sub: "simultaneous users" },
+            { label: "Scale", value: "AWS", sub: "auto-scaling" },
+            { label: "Category", value: "Grocery", sub: "perishable SKUs" },
+            { label: "Cache", value: "Redis", sub: "stock availability" },
+          ],
+          overview:
+            "Shwapno is Bangladesh's largest supermarket chain. Their online grocery store needs to handle 10k+ concurrent users with accurate real-time stock data — expired or out-of-stock items must never be orderable. I built the scalability layer and custom nopCommerce plugins for grocery-specific business rules: delivery time-slots and perishable stock management.",
+          owned: [
+            "AWS EC2 auto-scaling configuration handling 10k+ concurrent grocery shoppers",
+            "Redis caching for real-time product availability on category and product pages",
+            "Custom nopCommerce plugins for delivery time-slots and perishable stock rules",
+            "SQL Server query optimisations for inventory-heavy read patterns",
+          ],
+          lifecycle: [
+            { step: "Browser", detail: "grocery shopper", latency: "" },
+            { step: "CloudFront", detail: "static assets", latency: "~6ms" },
+            { step: "AWS ALB", detail: "load balance", latency: "~3ms" },
+            { step: "nopCommerce", detail: "catalog + cart", latency: "~30ms" },
+            { step: "Redis", detail: "stock cache", latency: "< 2ms" },
+            { step: "SQL Server", detail: "inventory DB", latency: "~20ms" },
+          ],
+          contribCols: 2,
+          contributions: [
+            {
+              title: "Scalability",
+              say: "10k+ concurrent — AWS auto-scaling + Redis",
+              items: [
+                "AWS EC2 auto-scaling group — scales out on CPU/request-rate CloudWatch alarms",
+                "Redis distributed cache for real-time stock availability with cache-aside pattern",
+                "CloudFront CDN for static assets and category page fragment caching",
+                "SQL Server index tuning — covering indexes on inventory hot-path read queries",
+              ],
+            },
+            {
+              title: "Grocery Domain",
+              say: "time-slot delivery + perishable stock management",
+              items: [
+                "Custom plugin for delivery time-slot selection with capacity limits per slot",
+                "Perishable stock management — items auto-deactivate when quantity hits zero",
+                "Minimum order quantity and weight-based checkout validation for grocery SKUs",
+                "ERP integration for real-time warehouse inventory sync into nopCommerce",
+              ],
+            },
+          ],
+          arch: {
+            tiers: [
+              {
+                group: "Client & Edge",
+                nodes: [
+                  {
+                    id: "browser",
+                    label: "Browser",
+                    sub: "grocery shopper",
+                    desc: "Static assets served from CloudFront; dynamic catalog pages from nopCommerce.",
+                  },
+                  {
+                    id: "cf",
+                    label: "CloudFront CDN",
+                    sub: "edge cache",
+                    desc: "Caches category pages, product images, and JS/CSS bundles at edge to reduce origin load.",
+                  },
+                ],
+              },
+              {
+                group: "AWS Infrastructure",
+                nodes: [
+                  {
+                    id: "alb",
+                    label: "AWS ALB",
+                    sub: "load balancer",
+                    desc: "Application Load Balancer with sticky sessions for cart state. Triggers auto-scaling alarms.",
+                  },
+                  {
+                    id: "ec2",
+                    label: "EC2 Auto-scaling",
+                    sub: "nopCommerce fleet",
+                    desc: "Auto-scaling group — scales out when CPU > 70% or request queue exceeds threshold.",
+                  },
+                ],
+              },
+              {
+                group: "Application",
+                nodes: [
+                  {
+                    id: "nc",
+                    label: "nopCommerce",
+                    sub: ".NET engine",
+                    desc: "Core grocery catalog, cart, checkout, order management engine.",
+                  },
+                  {
+                    id: "plugin",
+                    label: "Grocery Plugins",
+                    sub: "timeslot · stock",
+                    desc: "Delivery time-slot picker, perishable stock auto-deactivation, weight-based checkout validation.",
+                  },
+                ],
+              },
+              {
+                group: "Data & Cache",
+                nodes: [
+                  {
+                    id: "redis",
+                    label: "Redis",
+                    sub: "stock availability",
+                    desc: "Real-time stock cache — product pages read from Redis; writes go to SQL with cache-aside pattern.",
+                  },
+                  {
+                    id: "sql",
+                    label: "SQL Server",
+                    sub: "primary DB",
+                    desc: "Product catalog, orders, customer data, inventory with covering indexes for grocery read patterns.",
+                  },
+                ],
+              },
+            ],
+            edges: [
+              ["browser", "cf"],
+              ["cf", "alb"],
+              ["alb", "ec2"],
+              ["ec2", "nc"],
+              ["nc", "plugin"],
+              ["nc", "redis"],
+              ["redis", "sql"],
+              ["plugin", "sql"],
+            ],
+          },
+          tech: [
+            {
+              group: "Platform",
+              items: ["nopCommerce", ".NET", "ASP.NET MVC"],
+            },
+            { group: "Cache", items: ["Redis"] },
+            { group: "Cloud", items: ["AWS EC2", "AWS ALB", "CloudFront"] },
+            { group: "Data", items: ["SQL Server"] },
+          ],
+          impact: [
+            {
+              metric: "Scale",
+              result:
+                "10k+ concurrent users handled without degradation via AWS auto-scaling",
+            },
+            {
+              metric: "Accuracy",
+              result:
+                "Redis stock cache kept availability data correct at high read throughput",
+            },
+            {
+              metric: "Domain",
+              result:
+                "Grocery plugins (timeslots, perishable) reduced order errors significantly",
+            },
+            {
+              metric: "Performance",
+              result:
+                "SQL index tuning cut catalog page latency on heavy inventory reads",
+            },
+          ],
+        },
+
+        sailor: {
+          cat: "ecommerce",
+          category: "E-Commerce",
+          company: "Brain Station 23 · Sailor",
+          shortTitle: "Sailor",
+          title: "Sailor — fashion retail with Knawat dropship",
+          tagline:
+            "Fashion e-commerce on nopCommerce — Knawat API integration for full dropship product sourcing and order routing, Angular-powered rich UI components, and AWS hosting.",
+          cardSay: "fashion retail · Knawat dropship API + Angular UI",
+          motif: "cart",
+          role: "Software Engineer",
+          duration: "Brain Station 23",
+          live: null,
+          badges: [
+            "nopCommerce",
+            ".NET",
+            "Angular",
+            "Knawat API",
+            "AWS",
+            "SQL Server",
+          ],
+          metrics: [
+            { label: "Model", value: "Dropship", sub: "Knawat API" },
+            { label: "Frontend", value: "Angular", sub: "rich components" },
+            { label: "Orders", value: "Auto", sub: "Knawat routing" },
+            { label: "Platform", value: "nopCommerce", sub: ".NET base" },
+          ],
+          overview:
+            "Sailor sources fashion products from Knawat — a dropship marketplace API. The challenge: reflect Knawat's catalog in real-time in the storefront, auto-route customer orders back to Knawat for fulfilment, and use Angular for richer UI interactivity than nopCommerce's default Razor views. I built the Knawat integration plugin and the Angular micro-app layer.",
+          owned: [
+            "Knawat API integration plugin — catalog sync and automated order propagation",
+            "Angular UI components (product quick-view, wishlist, size-picker) embedded in Razor views",
+            "Webhook handler for Knawat shipping/tracking events updating order status",
+            "AWS EC2 + CloudFront hosting and deployment pipeline",
+          ],
+          lifecycle: [
+            { step: "Browser", detail: "Angular UI", latency: "" },
+            { step: "CloudFront", detail: "CDN edge", latency: "~7ms" },
+            { step: "nopCommerce", detail: ".NET engine", latency: "~22ms" },
+            {
+              step: "Knawat Plugin",
+              detail: "catalog + orders",
+              latency: "~400ms",
+            },
+            {
+              step: "Knawat API",
+              detail: "dropship source",
+              latency: "external",
+            },
+            { step: "SQL Server", detail: "local catalog", latency: "~15ms" },
+          ],
+          contribCols: 2,
+          contributions: [
+            {
+              title: "Knawat Integration",
+              say: "dropship catalog sync + automated order routing",
+              items: [
+                "Knawat API integration — product catalog import with price and availability sync",
+                "Scheduled background jobs to refresh Knawat catalog changes into nopCommerce",
+                "Order propagation: on checkout completion, creates Knawat fulfilment order automatically",
+                "Webhook handler for Knawat shipping/tracking events to update order status in real-time",
+              ],
+            },
+            {
+              title: "Angular UI + Infra",
+              say: "Angular micro-apps in Razor + AWS hosting",
+              items: [
+                "Angular micro-apps bootstrapped inside nopCommerce Razor pages for rich UI",
+                "Product quick-view modal, size-picker, and wishlist built as Angular components",
+                "AWS EC2 + CloudFront CDN setup with deployment scripts",
+                "Custom responsive nopCommerce theme for mobile fashion shoppers",
+              ],
+            },
+          ],
+          arch: {
+            tiers: [
+              {
+                group: "Frontend",
+                nodes: [
+                  {
+                    id: "ang",
+                    label: "Angular UI",
+                    sub: "rich components",
+                    desc: "Angular micro-apps embedded in Razor — product quick-view, wishlist, size-picker, cart drawer.",
+                  },
+                  {
+                    id: "razor",
+                    label: "Razor Views",
+                    sub: "nopCommerce",
+                    desc: "Standard nopCommerce Razor layer — catalog pages, checkout, order confirmation, user account.",
+                  },
+                ],
+              },
+              {
+                group: "Edge & Hosting",
+                nodes: [
+                  {
+                    id: "cf",
+                    label: "CloudFront CDN",
+                    sub: "static assets",
+                    desc: "Serves Angular bundles, product images, and CSS from edge. Cache invalidation on product updates.",
+                  },
+                  {
+                    id: "ec2",
+                    label: "AWS EC2",
+                    sub: "app hosting",
+                    desc: "EC2 instance running the nopCommerce .NET application with IIS.",
+                  },
+                ],
+              },
+              {
+                group: "Application",
+                nodes: [
+                  {
+                    id: "nc",
+                    label: "nopCommerce",
+                    sub: ".NET engine",
+                    desc: "Core catalog, cart, checkout, and order management engine. Knawat plugin extends order flow.",
+                  },
+                  {
+                    id: "kplugin",
+                    label: "Knawat Plugin",
+                    sub: "catalog + orders",
+                    desc: "Imports Knawat catalog on schedule, syncs prices/stock, propagates orders for dropship fulfilment, handles webhooks.",
+                  },
+                ],
+              },
+              {
+                group: "External & Data",
+                nodes: [
+                  {
+                    id: "kapi",
+                    label: "Knawat API",
+                    sub: "dropship",
+                    desc: "External Knawat API — product catalogue source, order placement, and shipping tracking webhooks.",
+                  },
+                  {
+                    id: "sql",
+                    label: "SQL Server",
+                    sub: "local catalog",
+                    desc: "Local nopCommerce DB — mirrors Knawat catalog with Sailor-specific pricing and categorisation.",
+                  },
+                ],
+              },
+            ],
+            edges: [
+              ["ang", "nc"],
+              ["razor", "nc"],
+              ["cf", "ang"],
+              ["ec2", "nc"],
+              ["nc", "kplugin"],
+              ["kplugin", "kapi"],
+              ["kplugin", "sql"],
+              ["nc", "sql"],
+            ],
+          },
+          tech: [
+            { group: "Frontend", items: ["Angular", "TypeScript"] },
+            {
+              group: "Platform",
+              items: ["nopCommerce", ".NET", "Razor Pages"],
+            },
+            { group: "Integration", items: ["Knawat API"] },
+            { group: "Cloud", items: ["AWS EC2", "CloudFront CDN"] },
+            { group: "Data", items: ["SQL Server"] },
+          ],
+          impact: [
+            {
+              metric: "Sourcing",
+              result:
+                "Knawat integration enabled full dropship model — no warehouse needed",
+            },
+            {
+              metric: "UX",
+              result:
+                "Angular micro-apps made UI significantly more interactive than default nopCommerce",
+            },
+            {
+              metric: "Fulfilment",
+              result:
+                "Automated order routing to Knawat — zero manual order processing",
+            },
+            {
+              metric: "Catalogue",
+              result:
+                "Scheduled sync kept product availability current without manual uploads",
+            },
+          ],
+        },
+
+        "cv-research": {
+          cat: "academic",
+          category: "Academic & Research",
+          company: "AIUB",
+          shortTitle: "CV Research",
+          title: "Human Pose Estimation — research at AIUB",
+          tagline:
+            '"Dynamic Recovering of Body Configurations by Combining Segmentation and Recognition" — undergraduate CS research combining pixel-wise body-part segmentation with per-part configuration classification.',
+          cardSay: "where it all started — human pose estimation research",
+          motif: "pose",
+          role: "Researcher · Student",
+          duration: "AIUB · 2019–2020",
+          live: null,
+          badges: [
+            "Computer Vision",
+            "Body Segmentation",
+            "Pose Estimation",
+            "Python",
+            "OpenCV",
+            "Deep Learning",
+          ],
+          metrics: [
+            { label: "Type", value: "Research", sub: "academic paper" },
+            { label: "Domain", value: "CV", sub: "computer vision" },
+            { label: "Method", value: "Seg+Rec", sub: "combined approach" },
+            { label: "GPA", value: "3.58", sub: "/ 4.0" },
+          ],
+          overview:
+            "For my undergraduate research at AIUB, I investigated a combined segmentation-and-recognition approach to human pose estimation. Rather than a single-stage regression, the method first segments body parts, then classifies configurations per segment to recover the full body pose — producing more robust results on occluded scenarios than end-to-end approaches at the time.",
+          owned: [
+            "Literature review on pose estimation and body-part segmentation state-of-the-art",
+            "Python/OpenCV implementation of the segmentation + configuration recognition pipeline",
+            "Dataset preparation — annotation, augmentation, training/test splits",
+            "Experiment design, result analysis, and academic paper write-up",
+          ],
+          lifecycle: [
+            { step: "Input Video", detail: "raw frames", latency: "" },
+            {
+              step: "Pre-processing",
+              detail: "resize · normalize",
+              latency: "~5ms",
+            },
+            {
+              step: "Segmentation",
+              detail: "body part masks",
+              latency: "~80ms",
+            },
+            {
+              step: "Configuration",
+              detail: "per-part classify",
+              latency: "~60ms",
+            },
+            {
+              step: "Pose Assembly",
+              detail: "skeleton build",
+              latency: "~15ms",
+            },
+            { step: "Visualizer", detail: "annotated output", latency: "" },
+          ],
+          contribCols: 2,
+          contributions: [
+            {
+              title: "Segmentation Stage",
+              say: "pixel-wise body part segmentation as first stage",
+              items: [
+                "Pixel-wise body part segmentation isolating head, torso, arms, legs per frame",
+                "Trained on annotated dataset with augmentation for scale, rotation, occlusion",
+                "OpenCV pre-processing: background subtraction, contrast normalisation, resize",
+                "Partial segment handling — occluded body parts still produce valid configurations",
+              ],
+            },
+            {
+              title: "Configuration Recognition",
+              say: "per-part classification → full body skeleton",
+              items: [
+                "Per-segment configuration classifier maps body part region to discrete angle bins",
+                "Assembly stage combines per-part classifications into a consistent full-body skeleton",
+                "Kinematic constraint validation prevents anatomically impossible pose assemblies",
+                "Evaluation against baseline end-to-end regression on benchmark frame sequences",
+              ],
+            },
+          ],
+          arch: {
+            tiers: [
+              {
+                group: "Input",
+                nodes: [
+                  {
+                    id: "video",
+                    label: "Video Frames",
+                    sub: "raw input",
+                    desc: "Source video sequences or webcam feed — frames extracted at configurable FPS for the pipeline.",
+                  },
+                  {
+                    id: "pre",
+                    label: "Pre-processing",
+                    sub: "OpenCV",
+                    desc: "Background subtraction, normalisation, resize to model input resolution. Data augmentation during training.",
+                  },
+                ],
+              },
+              {
+                group: "Segmentation",
+                nodes: [
+                  {
+                    id: "seg",
+                    label: "Body Segmentation",
+                    sub: "pixel-wise",
+                    desc: "Semantic segmentation model classifying each pixel as head, torso, left/right arm, legs, or background.",
+                  },
+                  {
+                    id: "region",
+                    label: "Region Proposals",
+                    sub: "part masks",
+                    desc: "Extracts bounding regions per body-part segment for use as per-part classifier inputs.",
+                  },
+                ],
+              },
+              {
+                group: "Configuration Recognition",
+                nodes: [
+                  {
+                    id: "cls",
+                    label: "Config Classifier",
+                    sub: "per-part CNN",
+                    desc: "Maps each body-part region image to a discrete angle/position configuration class.",
+                  },
+                  {
+                    id: "assem",
+                    label: "Pose Assembly",
+                    sub: "skeleton",
+                    desc: "Combines per-part configuration classes into a full-body 2D skeleton using kinematic constraints.",
+                  },
+                ],
+              },
+              {
+                group: "Output",
+                nodes: [
+                  {
+                    id: "pose",
+                    label: "Body Configuration",
+                    sub: "recovered pose",
+                    desc: "Final output — estimated joint positions and angles recovered from the 2D skeleton projection.",
+                  },
+                  {
+                    id: "vis",
+                    label: "Visualizer",
+                    sub: "annotated frames",
+                    desc: "Overlays the recovered skeleton on original frames for qualitative evaluation and paper figures.",
+                  },
+                ],
+              },
+            ],
+            edges: [
+              ["video", "pre"],
+              ["pre", "seg"],
+              ["seg", "region"],
+              ["region", "cls"],
+              ["cls", "assem"],
+              ["assem", "pose"],
+              ["pose", "vis"],
+            ],
+          },
+          tech: [
+            { group: "Language", items: ["Python"] },
+            { group: "Vision", items: ["OpenCV", "Computer Vision"] },
+            {
+              group: "ML",
+              items: ["Deep Learning", "CNN", "Semantic Segmentation"],
+            },
+            {
+              group: "Research",
+              items: ["Dataset Annotation", "Augmentation", "Benchmarking"],
+            },
+          ],
+          impact: [
+            {
+              metric: "Publication",
+              result: "Academic research paper accepted and published at AIUB",
+            },
+            {
+              metric: "Approach",
+              result:
+                "Combined segmentation+recognition outperformed baseline on occluded scenarios",
+            },
+            {
+              metric: "Foundation",
+              result:
+                "This research sparked my interest in intelligent systems — foundation of my career",
+            },
+            {
+              metric: "Academic",
+              result: "Completed as part of CS degree — GPA 3.58/4.0",
+            },
+          ],
+        },
+
+        "data-mining": {
+          cat: "academic",
+          category: "Academic & Research",
+          company: "AIUB",
+          shortTitle: "Data Mining & ML",
+          title: "Data Mining & ML — Heart Disease & Dietary Clustering",
+          tagline:
+            "Two undergraduate ML projects: Heart Disease Finder (supervised Decision Tree classification) and Dietary Pattern Clustering (unsupervised K-Means) — covering both supervised and unsupervised learning.",
+          cardSay: "supervised + unsupervised ML from my CS degree at AIUB",
+          motif: "cluster",
+          role: "Student Researcher",
+          duration: "AIUB · 2019–2020",
+          live: null,
+          badges: [
+            "Machine Learning",
+            "Decision Tree",
+            "K-Means",
+            "Python",
+            "Scikit-learn",
+            "Data Mining",
+          ],
+          metrics: [
+            { label: "Projects", value: "2", sub: "supervised+unsupervised" },
+            { label: "Methods", value: "DT + K-M", sub: "classify · cluster" },
+            { label: "Dataset", value: "UCI", sub: "heart disease" },
+            { label: "GPA", value: "3.58", sub: "/ 4.0" },
+          ],
+          overview:
+            "Two complementary ML projects: (1) Heart Disease Finder — a Decision Tree classifier trained on the UCI Heart Disease dataset to predict heart disease risk from 14 clinical attributes; (2) Dietary Clustering — unsupervised K-Means applied to dietary survey data to discover natural groupings of dietary patterns across a population. Both covered end-to-end: data prep, model training, evaluation, and reporting.",
+          owned: [
+            "Heart Disease Finder: feature selection, Decision Tree training, cross-validation, accuracy analysis",
+            "Dietary Clustering: K-Means implementation, elbow-method k-selection, cluster profiling",
+            "Data pre-processing pipelines: imputation, normalisation, encoding for both datasets",
+            "Results analysis, comparison with baseline, and academic write-up for both projects",
+          ],
+          lifecycle: [
+            { step: "Raw Data", detail: "UCI / survey CSV", latency: "" },
+            { step: "Pre-process", detail: "clean · encode", latency: "" },
+            { step: "Feature Eng.", detail: "select · scale", latency: "" },
+            { step: "Model Train", detail: "DT or K-Means", latency: "" },
+            { step: "Evaluate", detail: "accuracy / silhouette", latency: "" },
+            { step: "Report", detail: "findings output", latency: "" },
+          ],
+          contribCols: 2,
+          contributions: [
+            {
+              title: "Heart Disease Finder",
+              say: "supervised Decision Tree classifier on UCI dataset",
+              items: [
+                "UCI Heart Disease dataset: 14 clinical features, 303 instances, binary target",
+                "Feature selection via correlation analysis — removed low-signal attributes pre-training",
+                "Decision Tree with 5-fold cross-validation and hyperparameter tuning (max depth, min leaf)",
+                "Accuracy, precision, recall, F1, and confusion matrix analysis for clinical applicability",
+              ],
+            },
+            {
+              title: "Dietary Pattern Clustering",
+              say: "K-Means cluster discovery + profile naming",
+              items: [
+                "Dietary survey dataset — macro/micronutrient daily intake across population respondents",
+                "Elbow method determined optimal k=4 clusters from inertia curve",
+                "K-Means with k-means++ initialisation to avoid local minima — multiple restarts",
+                "Cluster profiling — named and described each dietary group from centroid feature values",
+              ],
+            },
+          ],
+          arch: {
+            tiers: [
+              {
+                group: "Data Sources",
+                nodes: [
+                  {
+                    id: "uci",
+                    label: "UCI Heart Dataset",
+                    sub: "303 instances",
+                    desc: "14 clinical attributes (age, cholesterol, ST slope, resting BP, etc.) with binary heart disease label.",
+                  },
+                  {
+                    id: "diet",
+                    label: "Dietary Survey",
+                    sub: "nutrition data",
+                    desc: "Daily macro/micronutrient intake per respondent — calories, protein, fat, carbs, vitamins.",
+                  },
+                ],
+              },
+              {
+                group: "Pre-processing",
+                nodes: [
+                  {
+                    id: "pre",
+                    label: "Data Cleaning",
+                    sub: "impute · encode",
+                    desc: "Missing value imputation (median), one-hot encoding for categorical features, outlier detection.",
+                  },
+                  {
+                    id: "feat",
+                    label: "Feature Engineering",
+                    sub: "select · scale",
+                    desc: "Correlation-based feature selection for heart dataset; MinMax scaling for K-Means (distance-sensitive).",
+                  },
+                ],
+              },
+              {
+                group: "Models",
+                nodes: [
+                  {
+                    id: "dt",
+                    label: "Decision Tree",
+                    sub: "supervised",
+                    desc: "Scikit-learn DecisionTreeClassifier — information gain splitting, max-depth tuned via 5-fold CV.",
+                  },
+                  {
+                    id: "km",
+                    label: "K-Means",
+                    sub: "unsupervised",
+                    desc: "Scikit-learn KMeans with k-means++ init — k=4 selected via elbow method. Groups dietary patterns.",
+                  },
+                ],
+              },
+              {
+                group: "Evaluation & Output",
+                nodes: [
+                  {
+                    id: "eval",
+                    label: "Evaluation",
+                    sub: "metrics",
+                    desc: "Supervised: accuracy, precision, recall, F1, confusion matrix. Unsupervised: silhouette score, inertia, cluster balance.",
+                  },
+                  {
+                    id: "viz",
+                    label: "Visualisation",
+                    sub: "plots · clusters",
+                    desc: "Decision boundary plots for DT; 2D PCA projection with cluster centroids for dietary groups.",
+                  },
+                  {
+                    id: "rep",
+                    label: "Academic Report",
+                    sub: "write-up",
+                    desc: "Methodology, results, limitations, and comparison with related approaches — academic course submission.",
+                  },
+                ],
+              },
+            ],
+            edges: [
+              ["uci", "pre"],
+              ["diet", "pre"],
+              ["pre", "feat"],
+              ["feat", "dt"],
+              ["feat", "km"],
+              ["dt", "eval"],
+              ["km", "eval"],
+              ["eval", "viz"],
+              ["viz", "rep"],
+            ],
+          },
+          tech: [
+            { group: "Language", items: ["Python"] },
+            { group: "ML Library", items: ["Scikit-learn"] },
+            { group: "Data", items: ["pandas", "NumPy"] },
+            { group: "Visualisation", items: ["Matplotlib", "Seaborn"] },
+            {
+              group: "Methods",
+              items: ["Decision Tree", "K-Means", "Cross-validation", "PCA"],
+            },
+          ],
+          impact: [
+            {
+              metric: "Supervised",
+              result:
+                "Decision Tree Heart Disease Finder with measurable accuracy above naive baseline",
+            },
+            {
+              metric: "Unsupervised",
+              result:
+                "K-Means identified 4 distinct dietary patterns with interpretable cluster profiles",
+            },
+            {
+              metric: "Coverage",
+              result:
+                "Demonstrated both supervised and unsupervised ML in one course",
+            },
+            {
+              metric: "Academic",
+              result: "Contributed to CS degree GPA 3.58/4.0 at AIUB",
+            },
+          ],
+        },
+      };
+
+      /* ═══════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════ */
+      let key = "mira";
+      try {
+        const p = new URLSearchParams(location.search).get("p");
+        const h = location.hash.replace(/^#/, "");
+        key = (p || h || "mira").toLowerCase().trim();
+      } catch (e) {}
+      if (!PROJECTS[key]) key = "mira";
+      const proj = PROJECTS[key];
+      document.title = proj.shortTitle + " — Anik Sarker";
+
+      // Switching projects while already on this page: hash change → reload to re-render
+      window.addEventListener("hashchange", () => location.reload());
+
+      /* ═══════════════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════════════ */
+      // Hero badges row
+      document.getElementById("hero-badges").innerHTML = `
+  <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:rgba(33,217,210,.10);border:1px solid rgba(33,217,210,.32);font-family:var(--font-mono);font-size:11.5px;color:var(--cyan-400);">
+    <span style="width:5px;height:5px;border-radius:50%;background:var(--cyan-500);"></span>${proj.category}
+  </span>
+  <span style="font-family:var(--font-mono);font-size:11.5px;color:var(--fg-4);">${proj.company}</span>`;
+
+      const titleEl = document.getElementById("proj-title");
+      titleEl.textContent = proj.title;
+      titleEl.setAttribute("data-mascot-say", proj.cardSay);
+      document.getElementById("proj-tagline").textContent = proj.tagline;
+
+      // Meta row
+      const liveHtml = proj.live
+        ? `<a href="${proj.live}" target="_blank" rel="noopener" data-mascot-say="this project is live in production — click to open ↗" style="display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 13px;border-radius:999px;background:rgba(70,222,139,.12);border:1px solid rgba(70,222,139,.42);"><i style="width:7px;height:7px;border-radius:50%;background:var(--green-500);box-shadow:0 0 8px var(--green-500);animation:pxl-glow 1.6s infinite;display:block;"></i><span style="font-family:var(--font-mono);font-size:11.5px;color:var(--green-500);">Live ↗</span></a>`
+        : `<span style="display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 13px;border-radius:999px;background:rgba(33,217,210,.08);border:1px solid rgba(33,217,210,.28);"><i style="width:7px;height:7px;border-radius:50%;background:var(--cyan-400);animation:pxl-glow 1.9s infinite;display:block;"></i><span style="font-family:var(--font-mono);font-size:11.5px;color:var(--cyan-400);">In production · client</span></span>`;
+      document.getElementById("proj-meta").innerHTML = `
+  <div style="font-family:var(--font-mono);font-size:12.5px;color:var(--fg-3);"><span style="color:var(--cyan-400);">role</span> &nbsp;${proj.role}</div>
+  <div style="font-family:var(--font-mono);font-size:12.5px;color:var(--fg-3);"><span style="color:var(--cyan-400);">when</span> &nbsp;${proj.duration}</div>
+  ${liveHtml}`;
+
+      document.getElementById("proj-badges").innerHTML = proj.badges
+        .map((b) => `<span class="tech-tag">${b}</span>`)
+        .join("");
+
+      // Metrics strip
+      document.getElementById("metrics-strip").innerHTML = proj.metrics
+        .map(
+          (m) => `
+  <div class="metric-card reveal" data-mascot-say="${m.label}: ${m.sub}">
+    <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-4);margin-bottom:6px;">${m.label}</div>
+    <div style="font-family:var(--font-display);font-weight:700;font-size:28px;letter-spacing:-.02em;color:var(--cyan-400);">${m.value}</div>
+    <div style="font-family:var(--font-mono);font-size:11px;color:var(--fg-3);margin-top:3px;">${m.sub}</div>
+  </div>`,
+        )
+        .join("");
+
+      // Overview
+      document.getElementById("proj-overview").textContent = proj.overview;
+      document.getElementById("proj-owned").innerHTML = proj.owned
+        .map(
+          (o) => `
+  <div style="display:flex;gap:10px;align-items:flex-start;">
+    <svg style="flex:0 0 auto;margin-top:2px;" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-500)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+    <span style="font-size:14px;line-height:1.5;color:var(--fg-2);">${o}</span>
+  </div>`,
+        )
+        .join("");
+
+      // Lifecycle
+      document.getElementById("lifecycle-steps").innerHTML = proj.lifecycle
+        .map(
+          (s, i, arr) => `
+  <div style="display:flex;align-items:center;gap:0;flex:0 0 auto;">
+    <div style="text-align:center;padding:12px 16px;background:var(--surface-card);border:1px solid var(--border-default);border-radius:10px;min-width:100px;" data-mascot-say="${s.step}: ${s.detail}">
+      <div style="font-family:var(--font-display);font-size:13.5px;font-weight:600;color:var(--fg-1);">${s.step}</div>
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--fg-3);margin-top:3px;">${s.detail}</div>
+      ${s.latency ? `<div style="font-family:var(--font-mono);font-size:10px;color:var(--cyan-500);margin-top:2px;">${s.latency}</div>` : ""}
+    </div>
+    ${i < arr.length - 1 ? `<div style="display:flex;align-items:center;padding:0 2px;"><svg width="28" height="14" viewBox="0 0 28 14" fill="none"><path d="M2 7 H20 M16 3 L22 7 L16 11" stroke="var(--cyan-500)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/></svg></div>` : ""}
+  </div>`,
+        )
+        .join("");
+
+      // Contributions
+      const contCols = proj.contribCols || 3;
+      document.getElementById("contributions-grid").style.gridTemplateColumns =
+        `repeat(${contCols},1fr)`;
+      document.getElementById("contributions-grid").innerHTML =
+        proj.contributions
+          .map(
+            (c) => `
+  <div class="reveal" data-mascot-say="${c.say}" style="padding:22px;background:var(--surface-card);border:1px solid var(--border-default);border-radius:12px;box-shadow:var(--edge-top),var(--shadow-sm);">
+    <h3 style="margin:0 0 14px;font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--fg-1);display:flex;align-items:center;gap:8px;">
+      <span style="width:7px;height:7px;border-radius:2px;background:var(--cyan-400);box-shadow:0 0 8px var(--cyan-500);display:inline-block;"></span>${c.title}
+    </h3>
+    <div style="display:flex;flex-direction:column;gap:10px;">${c.items
+      .map(
+        (it) => `
+      <div style="display:flex;gap:9px;align-items:flex-start;">
+        <span style="flex:0 0 auto;margin-top:7px;width:4px;height:4px;border-radius:50%;background:var(--fg-4);display:inline-block;"></span>
+        <span style="font-size:13.5px;line-height:1.55;color:var(--fg-2);">${it}</span>
+      </div>`,
+      )
+      .join("")}
+    </div>
+  </div>`,
+          )
+          .join("");
+
+      // Tech stack
+      document.getElementById("tech-stack").innerHTML = proj.tech
+        .map(
+          (t) => `
+  <div style="display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:start;padding-bottom:14px;border-bottom:1px solid var(--border-subtle);">
+    <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-3);padding-top:3px;">${t.group}</span>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">${t.items.map((i) => `<span style="font-family:var(--font-mono);font-size:11.5px;padding:3px 9px;border-radius:6px;color:var(--fg-2);background:var(--surface-raised);border:1px solid var(--border-default);">${i}</span>`).join("")}</div>
+  </div>`,
+        )
+        .join("");
+
+      // Impact
+      document.getElementById("impact-list").innerHTML = proj.impact
+        .map(
+          (m) => `
+  <div style="padding:16px 18px;background:var(--surface-card);border:1px solid var(--border-default);border-radius:10px;box-shadow:var(--edge-top);" data-mascot-say="${m.metric}: ${m.result}">
+    <div style="font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan-400);margin-bottom:6px;">${m.metric}</div>
+    <div style="font-size:14px;line-height:1.5;color:var(--fg-1);">${m.result}</div>
+  </div>`,
+        )
+        .join("");
+
+      // Other deep-dives — same category first, flagships as fallback, max 3
+      const _samecat = Object.entries(PROJECTS)
+        .filter(([k, p]) => k !== key && p.cat === proj.cat)
+        .slice(0, 2)
+        .map(([k, p]) => ({ k, p }));
+      const _others3 = [..._samecat];
+      if (_others3.length < 3) {
+        const _fl = Object.entries(PROJECTS)
+          .filter(
+            ([k, p]) =>
+              ["mira", "clappit", "gsk-expense", "gsk-order"].includes(k) &&
+              k !== key &&
+              !_others3.find((o) => o.k === k),
+          )
+          .slice(0, 3 - _others3.length)
+          .map(([k, p]) => ({ k, p }));
+        _others3.push(..._fl);
+      }
+      const others = _others3;
+      document.getElementById("others-grid").innerHTML = others
+        .map(
+          ({ k, p }) => `
+  <a href="project-detail.html#${k}" data-mascot-say="${p.cardSay}" style="display:flex;flex-direction:column;gap:6px;padding:18px;background:var(--surface-card);border:1px solid var(--border-default);border-radius:12px;box-shadow:var(--edge-top),var(--shadow-sm);overflow:hidden;transition:transform var(--dur-base),border-color var(--dur-base);" onmouseover="this.style.transform='translateY(-3px)';this.style.borderColor='var(--border-strong)'" onmouseout="this.style.transform='';this.style.borderColor=''">
+    <div style="position:relative;height:46px;margin:-18px -18px 12px;background:var(--ink-1000);border-bottom:1px solid var(--border-subtle);border-radius:12px 12px 0 0;overflow:hidden;">
+      <canvas data-motif="${p.motif}" style="display:block;width:100%;height:100%;"></canvas>
+    </div>
+    <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--fg-4);">${p.company}</span>
+    <span style="font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--fg-1);">${p.shortTitle} <span style="color:var(--cyan-400);">→</span></span>
+    <span style="font-size:12.5px;color:var(--fg-3);line-height:1.45;">${p.tagline.slice(0, 70)}…</span>
+  </a>`,
+        )
+        .join("");
+
+      /* ═══════════════════════════════════════════════════
+   INTERACTIVE ARCHITECTURE DIAGRAM
+═══════════════════════════════════════════════════ */
+      const archData = proj.arch;
+      const wrapper = document.getElementById("arch-wrapper");
+      const canvas = document.getElementById("arch-canvas");
+      const ctx = canvas.getContext("2d");
+      const tooltip = document.getElementById("arch-tooltip");
+      const ttName = document.getElementById("arch-tt-name");
+      const ttSub = document.getElementById("arch-tt-sub");
+      const ttDesc = document.getElementById("arch-tt-desc");
+
+      // Layout constants
+      const TIER_H = 110,
+        TIER_PAD_X = 140,
+        TOP_PAD = 20,
+        NODE_W = 150,
+        NODE_H = 46,
+        NODE_R = 9;
+      const TOTAL_H = TOP_PAD * 2 + archData.tiers.length * TIER_H;
+
+      // Pan / zoom state
+      let panX = 0,
+        panY = 0,
+        zoom = 1;
+      let dragging = false,
+        dragStart = { x: 0, y: 0 },
+        panStart = { x: 0, y: 0 };
+      let hoveredNode = null;
+
+      // Compute layout (logical coordinates, before transform)
+      const nodeCoords = {};
+      archData.tiers.forEach((tier, ti) => {
+        const cy = TOP_PAD + ti * TIER_H + TIER_H / 2;
+        const n = tier.nodes.length;
+        tier.nodes.forEach((node, ni) => {
+          nodeCoords[node.id] = {
+            x: TIER_PAD_X + (1000 - TIER_PAD_X - 30) * ((ni + 0.5) / n),
+            y: cy,
+            tier: ti,
+            node,
+          };
+        });
+      });
+
+      // Build edge path data
+      const edges = archData.edges
+        .map(([a, b]) => {
+          const A = nodeCoords[a],
+            B = nodeCoords[b];
+          if (!A || !B) return null;
+          const sameTier = A.tier === B.tier;
+          let path;
+          if (sameTier) {
+            path = [
+              A.x,
+              A.y + NODE_H / 2,
+              A.x,
+              A.y + NODE_H / 2 + 26,
+              B.x,
+              B.y + NODE_H / 2 + 26,
+              B.x,
+              B.y + NODE_H / 2,
+            ];
+          } else {
+            const midY = (A.y + B.y) / 2;
+            path = [
+              A.x,
+              A.y + NODE_H / 2,
+              A.x,
+              midY,
+              B.x,
+              midY,
+              B.x,
+              B.y - NODE_H / 2,
+            ];
+          }
+          return {
+            from: a,
+            to: b,
+            path,
+            off: Math.random(),
+            fromTier: A.tier,
+            toTier: B.tier,
+          };
+        })
+        .filter(Boolean);
+
+      // Dot phase state
+      let t0Arch = null;
+
+      /* ── Walkthrough step model ── */
+      const TN = archData.tiers.length;
+      function stageDesc(tier) {
+        const names = tier.nodes.map((n) => n.label);
+        const joined =
+          names.length > 1
+            ? names.slice(0, -1).join(", ") + " and " + names.slice(-1)
+            : names[0];
+        return `${tier.group} — ${names.length} component${names.length > 1 ? "s" : ""}: ${joined}.`;
+      }
+      const steps = [
+        {
+          overview: true,
+          tierIndex: -1,
+          step: "Overview",
+          title: proj.shortTitle + " · full architecture",
+          chips: archData.tiers.map((t) => t.group),
+          desc: "The complete system, end to end. Press play — or use the arrows — to walk through it one stage at a time.",
+        },
+      ];
+      archData.tiers.forEach((tier, i) =>
+        steps.push({
+          overview: false,
+          tierIndex: i,
+          step: "Stage " + (i + 1) + " / " + TN,
+          title: tier.group,
+          chips: tier.nodes.map((n) => n.label + (n.sub ? " · " + n.sub : "")),
+          desc: stageDesc(tier),
+        }),
+      );
+
+      let activeStep = 0,
+        playing = false,
+        stepClock = 0,
+        manualView = false,
+        archStarted = false;
+      const STEP_DUR_OVERVIEW = 2.8,
+        STEP_DUR = 3.3;
+      let viewT = { panX: 0, panY: 0, zoom: 1 };
+
+      const capStep = document.getElementById("cap-step"),
+        capTitle = document.getElementById("cap-title"),
+        capChips = document.getElementById("cap-chips"),
+        capDesc = document.getElementById("cap-desc"),
+        countEl = document.getElementById("arch-count"),
+        dotsEl = document.getElementById("arch-dots"),
+        playIco = document.getElementById("play-ico"),
+        playTxt = document.getElementById("play-txt");
+
+      function frameForStep() {
+        const cw = wrapper.clientWidth,
+          ch = wrapper.clientHeight,
+          s = steps[activeStep];
+        if (s.overview) {
+          const z = Math.min(cw / 1000, ch / Math.max(TOTAL_H, 1)) * 0.94;
+          viewT = {
+            zoom: z,
+            panX: (cw - 1000 * z) / 2,
+            panY: (ch - TOTAL_H * z) / 2,
+          };
+        } else {
+          const z = (cw / 1000) * 1.04;
+          const tierCY = TOP_PAD + s.tierIndex * TIER_H + TIER_H / 2;
+          viewT = {
+            zoom: z,
+            panX: (cw - 1000 * z) / 2,
+            panY: ch / 2 - tierCY * z,
+          };
+        }
+      }
+      function applyStep() {
+        manualView = false;
+        stepClock = 0;
+        const s = steps[activeStep];
+        if (capStep) capStep.textContent = s.step;
+        if (capTitle) capTitle.textContent = s.title;
+        if (capChips)
+          capChips.innerHTML = s.chips
+            .map((c) => '<span class="cap-chip">' + c + "</span>")
+            .join("");
+        if (capDesc) capDesc.textContent = s.desc;
+        if (countEl)
+          countEl.textContent =
+            String(activeStep + 1).padStart(2, "0") +
+            " / " +
+            String(steps.length).padStart(2, "0");
+        if (dotsEl)
+          Array.from(dotsEl.children).forEach((d, i) =>
+            d.classList.toggle("active", i === activeStep),
+          );
+        frameForStep();
+      }
+      function gotoStep(i) {
+        activeStep = (i + steps.length) % steps.length;
+        applyStep();
+      }
+      function nextStep() {
+        gotoStep(activeStep + 1);
+      }
+      function prevStep() {
+        gotoStep(activeStep - 1);
+      }
+      function setPlaying(p) {
+        playing = p;
+        if (playIco) playIco.textContent = p ? "❚❚" : "▶";
+        if (playTxt) playTxt.textContent = p ? "Pause" : "Play walkthrough";
+      }
+
+      function setDefaultView() {
+        const cw = wrapper.clientWidth;
+        zoom = cw / 1000;
+        panX = 0;
+        panY = 0;
+      }
+
+      function resizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const cw = wrapper.clientWidth;
+        const ch = wrapper.clientHeight;
+        canvas.width = Math.round(cw * dpr);
+        canvas.height = Math.round(ch * dpr);
+        canvas.style.width = cw + "px";
+        canvas.style.height = ch + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        setDefaultView();
+      }
+
+      function pathLength(pts) {
+        let len = 0;
+        for (let i = 0; i < pts.length - 2; i += 2) {
+          const dx = pts[i + 2] - pts[i],
+            dy = pts[i + 3] - pts[i + 1];
+          len += Math.sqrt(dx * dx + dy * dy);
+        }
+        return len;
+      }
+      function pointAlongPath(pts, u) {
+        const total = pathLength(pts);
+        let target = u * total,
+          gone = 0;
+        for (let i = 0; i < pts.length - 2; i += 2) {
+          const dx = pts[i + 2] - pts[i],
+            dy = pts[i + 3] - pts[i + 1];
+          const seg = Math.sqrt(dx * dx + dy * dy);
+          if (gone + seg >= target) {
+            const t = (target - gone) / seg;
+            return { x: pts[i] + dx * t, y: pts[i + 1] + dy * t };
+          }
+          gone += seg;
+        }
+        return { x: pts[pts.length - 2], y: pts[pts.length - 1] };
+      }
+
+      let lastTs = null;
+      function draw(ts) {
+        if (!t0Arch) t0Arch = ts;
+        const t = (ts - t0Arch) / 1000;
+        const dt = lastTs != null ? Math.min(0.05, (ts - lastTs) / 1000) : 0;
+        lastTs = ts;
+
+        // auto-advance when playing
+        if (playing) {
+          stepClock += dt;
+          const dur = steps[activeStep].overview ? STEP_DUR_OVERVIEW : STEP_DUR;
+          if (stepClock >= dur) nextStep();
+        }
+        // smooth view framing (suspended while user is in manual control)
+        if (!manualView && !dragging) {
+          panX += (viewT.panX - panX) * 0.1;
+          panY += (viewT.panY - panY) * 0.1;
+          zoom += (viewT.zoom - zoom) * 0.1;
+        }
+
+        const s = steps[activeStep],
+          overview = s.overview,
+          stepTier = s.tierIndex;
+        const cw = wrapper.clientWidth,
+          ch = wrapper.clientHeight;
+        ctx.clearRect(0, 0, cw, ch);
+        ctx.save();
+        ctx.translate(panX, panY);
+        ctx.scale(zoom, zoom);
+
+        // tier bands + labels
+        archData.tiers.forEach((tier, ti) => {
+          const focus = !overview && ti === stepTier;
+          const dim = overview ? 1 : ti === stepTier ? 1 : 0.3;
+          const top = TOP_PAD + ti * TIER_H;
+          ctx.globalAlpha = dim;
+          ctx.beginPath();
+          ctx.roundRect(
+            TIER_PAD_X - 14,
+            top + 8,
+            1000 - TIER_PAD_X,
+            TIER_H - 16,
+            10,
+          );
+          ctx.fillStyle = focus
+            ? "rgba(33,217,210,.07)"
+            : "rgba(255,255,255,.012)";
+          ctx.fill();
+          ctx.strokeStyle = focus
+            ? "rgba(33,217,210,.34)"
+            : "rgba(35,44,56,.6)";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          // wrapped tier label
+          ctx.save();
+          ctx.font = `600 10px 'JetBrains Mono', monospace`;
+          ctx.fillStyle = focus ? "#21D9D2" : "#525C68";
+          ctx.textAlign = "left";
+          const words = tier.group.split(" ");
+          let line = "",
+            ly = top + TIER_H / 2 - (words.length > 2 ? 8 : 4);
+          words.forEach((w) => {
+            const test = line ? line + " " + w : w;
+            if (test.length > 11 && line) {
+              ctx.fillText(line.toUpperCase(), 10, ly);
+              line = w;
+              ly += 13;
+            } else line = test;
+          });
+          ctx.fillText(line.toUpperCase(), 10, ly);
+          ctx.restore();
+          ctx.globalAlpha = 1;
+        });
+
+        // edges
+        edges.forEach((e) => {
+          const hot = overview
+            ? true
+            : e.fromTier === stepTier || e.toTier === stepTier;
+          ctx.globalAlpha = hot ? 1 : 0.16;
+          const pts = e.path;
+          ctx.beginPath();
+          ctx.moveTo(pts[0], pts[1]);
+          for (let i = 2; i < pts.length; i += 2)
+            ctx.lineTo(pts[i], pts[i + 1]);
+          ctx.strokeStyle =
+            hot && !overview ? "rgba(33,217,210,.5)" : "rgba(35,44,56,.95)";
+          ctx.lineWidth = 1.3;
+          ctx.setLineDash([4, 6]);
+          ctx.lineDashOffset = -t * 8;
+          ctx.stroke();
+          ctx.setLineDash([]);
+          // travelling dot (only on flowing edges)
+          if (hot) {
+            const u = (t * 0.24 + e.off) % 1;
+            const pt = pointAlongPath(pts, u);
+            const a = Math.sin(u * Math.PI);
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y, 3, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(62,233,226,${(a * 0.95).toFixed(2)})`;
+            ctx.shadowColor = "rgba(33,217,210,.8)";
+            ctx.shadowBlur = 8;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
+          ctx.globalAlpha = 1;
+        });
+
+        // nodes
+        archData.tiers.forEach((tier, ti) => {
+          const focus = !overview && ti === stepTier;
+          const dim = overview ? 1 : ti === stepTier ? 1 : 0.3;
+          ctx.globalAlpha = dim;
+          tier.nodes.forEach((node) => {
+            const c = nodeCoords[node.id];
+            const hov = hoveredNode === node.id;
+            const nx = c.x - NODE_W / 2,
+              ny = c.y - NODE_H / 2;
+            if (hov || focus) {
+              ctx.shadowColor = "rgba(33,217,210,.4)";
+              ctx.shadowBlur = hov ? 18 : 12;
+            }
+            ctx.beginPath();
+            ctx.roundRect(nx, ny, NODE_W, NODE_H, NODE_R);
+            ctx.fillStyle = hov
+              ? "rgba(33,217,210,.18)"
+              : focus
+                ? "rgba(33,217,210,.10)"
+                : "#131820";
+            ctx.fill();
+            ctx.strokeStyle = hov
+              ? "#3EE9E2"
+              : focus
+                ? "rgba(33,217,210,.7)"
+                : "#232C38";
+            ctx.lineWidth = hov ? 1.8 : focus ? 1.6 : 1.3;
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            // label
+            ctx.font = `600 11.5px 'Space Grotesk', sans-serif`;
+            ctx.fillStyle = hov ? "#6df2ec" : focus ? "#c8f9f7" : "#F2F5F8";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(node.label, c.x, node.sub ? c.y - 5 : c.y);
+            if (node.sub) {
+              ctx.font = `400 9px 'JetBrains Mono', monospace`;
+              ctx.fillStyle = focus ? "#21D9D2" : "#525C68";
+              ctx.fillText(node.sub, c.x, c.y + 9);
+            }
+          });
+          ctx.globalAlpha = 1;
+        });
+
+        ctx.restore();
+        requestAnimationFrame(draw);
+      }
+
+      // Build step dots
+      if (dotsEl) {
+        dotsEl.innerHTML = steps
+          .map(
+            (s, i) =>
+              '<button class="pb-dot' +
+              (i === 0 ? " active" : "") +
+              '" data-i="' +
+              i +
+              '" title="' +
+              s.title.replace(/"/g, "") +
+              '"></button>',
+          )
+          .join("");
+        dotsEl.querySelectorAll(".pb-dot").forEach((d) =>
+          d.addEventListener("click", () => {
+            setPlaying(false);
+            gotoStep(+d.dataset.i);
+          }),
+        );
+      }
+      resizeCanvas();
+      applyStep();
+      // snap initial view to the overview frame
+      panX = viewT.panX;
+      panY = viewT.panY;
+      zoom = viewT.zoom;
+      requestAnimationFrame(draw);
+      window.addEventListener("resize", () => {
+        resizeCanvas();
+        frameForStep();
+      });
+
+      // Playback controls
+      const _playBtn = document.getElementById("arch-play"),
+        _prevBtn = document.getElementById("arch-prev"),
+        _nextBtn = document.getElementById("arch-next");
+      if (_playBtn)
+        _playBtn.addEventListener("click", () => {
+          setPlaying(!playing);
+          if (playing) {
+            manualView = false;
+            frameForStep();
+          }
+        });
+      if (_prevBtn)
+        _prevBtn.addEventListener("click", () => {
+          setPlaying(false);
+          prevStep();
+        });
+      if (_nextBtn)
+        _nextBtn.addEventListener("click", () => {
+          setPlaying(false);
+          nextStep();
+        });
+
+      // Auto-start the walkthrough the first time the diagram scrolls into view
+      function maybeStartArch() {
+        if (archStarted) return;
+        const r = wrapper.getBoundingClientRect(),
+          vh = window.innerHeight || 800;
+        if (r.top < vh * 0.55 && r.bottom > vh * 0.25) {
+          archStarted = true;
+          setPlaying(true);
+          manualView = false;
+          frameForStep();
+        }
+      }
+      window.addEventListener("scroll", maybeStartArch, { passive: true });
+      setTimeout(maybeStartArch, 900);
+
+      // Hit-test: logical coords from canvas mouse event
+      function canvasToLogical(e) {
+        const rect = canvas.getBoundingClientRect();
+        const cx = (e.clientX - rect.left - panX) / zoom;
+        const cy = (e.clientY - rect.top - panY) / zoom;
+        return { x: cx, y: cy };
+      }
+      function hitTest(lx, ly) {
+        for (const [id, c] of Object.entries(nodeCoords)) {
+          if (
+            lx >= c.x - NODE_W / 2 - 4 &&
+            lx <= c.x + NODE_W / 2 + 4 &&
+            ly >= c.y - NODE_H / 2 - 4 &&
+            ly <= c.y + NODE_H / 2 + 4
+          )
+            return id;
+        }
+        return null;
+      }
+
+      // Mouse events
+      canvas.addEventListener("mousedown", (e) => {
+        dragging = true;
+        canvas.classList.add("dragging");
+        manualView = true;
+        setPlaying(false);
+        dragStart = { x: e.clientX, y: e.clientY };
+        panStart = { x: panX, y: panY };
+      });
+      window.addEventListener("mousemove", (e) => {
+        if (dragging) {
+          panX = panStart.x + (e.clientX - dragStart.x);
+          panY = panStart.y + (e.clientY - dragStart.y);
+          return;
+        }
+        const rect = canvas.getBoundingClientRect();
+        if (
+          e.clientX < rect.left ||
+          e.clientX > rect.right ||
+          e.clientY < rect.top ||
+          e.clientY > rect.bottom
+        ) {
+          if (hoveredNode) {
+            hoveredNode = null;
+            tooltip.classList.remove("visible");
+          }
+          return;
+        }
+        const { x, y } = canvasToLogical(e);
+        const hit = hitTest(x, y);
+        if (hit !== hoveredNode) {
+          hoveredNode = hit;
+          if (hit) {
+            const c = nodeCoords[hit];
+            const node = c.node;
+            ttName.textContent = node.label;
+            ttSub.textContent = node.sub || "";
+            ttDesc.textContent = node.desc || "";
+            // Position tooltip
+            const sx = c.x * zoom + panX,
+              sy = (c.y - NODE_H / 2) * zoom + panY;
+            const tw = 440,
+              th = 120;
+            let tx = sx - tw / 2,
+              ty = sy - th - 10;
+            const ww = wrapper.clientWidth;
+            if (tx < 8) tx = 8;
+            if (tx + tw > ww - 8) tx = ww - tw - 8;
+            if (ty < 8) {
+              ty = sy + NODE_H * zoom + 10;
+            }
+            tooltip.style.left = tx + "px";
+            tooltip.style.top = ty + "px";
+            tooltip.classList.add("visible");
+          } else {
+            tooltip.classList.remove("visible");
+          }
+        }
+      });
+      window.addEventListener("mouseup", () => {
+        dragging = false;
+        canvas.classList.remove("dragging");
+      });
+      canvas.addEventListener(
+        "wheel",
+        (e) => {
+          e.preventDefault();
+          manualView = true;
+          setPlaying(false);
+          const rect = canvas.getBoundingClientRect();
+          const mx = e.clientX - rect.left,
+            my = e.clientY - rect.top;
+          const factor = e.deltaY < 0 ? 1.12 : 0.89;
+          const newZoom = Math.max(0.35, Math.min(3, zoom * factor));
+          panX = mx - (mx - panX) * (newZoom / zoom);
+          panY = my - (my - panY) * (newZoom / zoom);
+          zoom = newZoom;
+        },
+        { passive: false },
+      );
+
+      document.getElementById("arch-zoom-in").addEventListener("click", () => {
+        manualView = true;
+        setPlaying(false);
+        const cw = wrapper.clientWidth / 2,
+          ch = wrapper.clientHeight / 2;
+        const nz = Math.min(3, zoom * 1.2);
+        panX = cw - (cw - panX) * (nz / zoom);
+        panY = ch - (ch - panY) * (nz / zoom);
+        zoom = nz;
+      });
+      document.getElementById("arch-zoom-out").addEventListener("click", () => {
+        manualView = true;
+        setPlaying(false);
+        const cw = wrapper.clientWidth / 2,
+          ch = wrapper.clientHeight / 2;
+        const nz = Math.max(0.35, zoom * 0.83);
+        panX = cw - (cw - panX) * (nz / zoom);
+        panY = ch - (ch - panY) * (nz / zoom);
+        zoom = nz;
+      });
+      document.getElementById("arch-reset").addEventListener("click", () => {
+        setPlaying(false);
+        gotoStep(0);
+      });
+
+      // Touch pan
+      let touchStart = null;
+      canvas.addEventListener(
+        "touchstart",
+        (e) => {
+          if (e.touches.length === 1) {
+            manualView = true;
+            setPlaying(false);
+            touchStart = {
+              x: e.touches[0].clientX,
+              y: e.touches[0].clientY,
+              px: panX,
+              py: panY,
+            };
+          }
+        },
+        { passive: true },
+      );
+      canvas.addEventListener(
+        "touchmove",
+        (e) => {
+          if (touchStart && e.touches.length === 1) {
+            panX = touchStart.px + (e.touches[0].clientX - touchStart.x);
+            panY = touchStart.py + (e.touches[0].clientY - touchStart.y);
+          }
+        },
+        { passive: true },
+      );
+      canvas.addEventListener("touchend", () => {
+        touchStart = null;
+      });
+
+      /* ═══════════════════════════════════════════════════
+   TABLE OF CONTENTS — build + scroll-spy
+═══════════════════════════════════════════════════ */
+      const tocItems = [
+        { id: "hero", label: "Overview" },
+        { id: "problem", label: "The Problem" },
+        { id: "architecture", label: "Architecture" },
+        { id: "lifecycle", label: "Request Lifecycle", sub: true },
+        { id: "contributions", label: "Contributions", sub: true },
+        { id: "tech-impact", label: "Tech Stack & Impact" },
+        { id: "other-dives", label: "More Deep-Dives" },
+      ];
+      const tocNav = document.getElementById("toc-nav");
+      if (tocNav) {
+        tocNav.innerHTML = tocItems
+          .map(
+            (it) =>
+              '<a class="toc-link' +
+              (it.sub ? " sub" : "") +
+              '" href="#' +
+              it.id +
+              '" data-id="' +
+              it.id +
+              '">' +
+              it.label +
+              "</a>",
+          )
+          .join("");
+        const tocLinks = Array.from(tocNav.querySelectorAll(".toc-link"));
+        tocLinks.forEach((a) =>
+          a.addEventListener("click", (e) => {
+            e.preventDefault();
+            const el = document.getElementById(a.dataset.id);
+            if (el) {
+              const y = el.getBoundingClientRect().top + window.scrollY - 72;
+              window.scrollTo({ top: y, behavior: "smooth" });
+            }
+          }),
+        );
+        const spy = () => {
+          let bestId = tocItems[0].id,
+            bestTop = -Infinity;
+          tocItems.forEach((it) => {
+            const el = document.getElementById(it.id);
+            if (!el) return;
+            const top = el.getBoundingClientRect().top;
+            if (top - 96 <= 0 && top > bestTop) {
+              bestTop = top;
+              bestId = it.id;
+            }
+          });
+          tocLinks.forEach((a) =>
+            a.classList.toggle("active", a.dataset.id === bestId),
+          );
+        };
+        window.addEventListener("scroll", spy, { passive: true });
+        window.addEventListener("resize", spy, { passive: true });
+        spy();
+      }
+
+      /* ═══════════════════════════════════════════════════
+   REVEALS
+═══════════════════════════════════════════════════ */
+      const watchers = [];
+      function initReveals() {
+        document
+          .querySelectorAll(".reveal")
+          .forEach((el) => watchers.push({ el, done: false }));
+        const check = () => {
+          const vh = window.innerHeight || 800;
+          watchers.forEach((w) => {
+            if (w.done) return;
+            const r = w.el.getBoundingClientRect();
+            if (r.top < vh * 0.92 && r.bottom > -60) {
+              w.done = true;
+              w.el.classList.add("in");
+            }
+          });
+        };
+        window.addEventListener("scroll", check, { passive: true });
+        window.addEventListener("resize", check, { passive: true });
+        let n = 0;
+        const iv = setInterval(() => {
+          check();
+          if (++n > 30) clearInterval(iv);
+        }, 200);
+        setTimeout(
+          () =>
+            watchers.forEach((w) => {
+              if (!w.done) {
+                w.done = true;
+                w.el.classList.add("in");
+              }
+            }),
+          4000,
+        );
+        check();
+      }
+      initReveals();
+
+      /* ═══════════════════════════════════════════════════
+   MASCOT
+═══════════════════════════════════════════════════ */
+      const mascotRoot = document.getElementById("mascot");
+      const mascotFace = document.getElementById("mascot-face");
+      const mascotEyes = document.getElementById("mascot-eyes");
+      const mascotArm = document.getElementById("mascot-arm");
+      const mascotBubble = document.getElementById("mascot-bubble");
+      const mascotSayEl = document.getElementById("mascot-say");
+      let cur = { x: window.innerWidth * 0.6, y: window.innerHeight * 0.4 };
+      let tgt = { ...cur },
+        prev = { ...cur },
+        facing = 1,
+        lastSayT = 0,
+        bubbleUntil = 0;
+      function mascotSay(text, dur) {
+        const now = performance.now();
+        if (now - lastSayT < 650 && now < bubbleUntil) return;
+        lastSayT = now;
+        bubbleUntil = now + (dur || 2600);
+        if (mascotSayEl) mascotSayEl.textContent = text;
+        if (mascotBubble) {
+          mascotBubble.style.transition = "none";
+          mascotBubble.style.animation = "none";
+          void mascotBubble.offsetWidth;
+          mascotBubble.style.animation = "mascot-pop .34s ease-out forwards";
+        }
+        if (mascotArm) {
+          mascotArm.style.animation = "none";
+          void mascotArm.offsetWidth;
+          mascotArm.style.animation = "mascot-wave .5s ease-out 3";
+        }
+      }
+      window.addEventListener(
+        "mousemove",
+        (e) => {
+          tgt.x = e.clientX;
+          tgt.y = e.clientY;
+        },
+        { passive: true },
+      );
+      document.addEventListener(
+        "mouseover",
+        (e) => {
+          const el =
+            e.target && e.target.closest
+              ? e.target.closest("[data-mascot-say]")
+              : null;
+          if (el) mascotSay(el.getAttribute("data-mascot-say"), 2600);
+        },
+        { passive: true },
+      );
+      window.addEventListener("pixel-say", (e) => {
+        if (e.detail?.text) mascotSay(e.detail.text, e.detail.dur || 3200);
+      });
+      function mascotLoop() {
+        cur.x += (tgt.x - cur.x) * 0.14;
+        cur.y += (tgt.y - cur.y) * 0.14;
+        const vx = cur.x - prev.x,
+          vy = cur.y - prev.y;
+        prev.x = cur.x;
+        prev.y = cur.y;
+        if (mascotRoot)
+          mascotRoot.style.transform = `translate3d(${cur.x + 18}px,${cur.y + 20}px,0)`;
+        if (vx < -0.35) facing = -1;
+        else if (vx > 0.35) facing = 1;
+        if (mascotFace) mascotFace.style.transform = `scaleX(${facing})`;
+        if (mascotEyes) {
+          const ex = Math.max(-2.2, Math.min(2.2, vx * 0.5));
+          const ey = Math.max(-1.6, Math.min(1.8, vy * 0.4));
+          mascotEyes.style.transform = `translate(${ex}px,${ey}px)`;
+        }
+        if (
+          mascotBubble &&
+          performance.now() > bubbleUntil &&
+          mascotBubble.style.opacity !== "0"
+        ) {
+          mascotBubble.style.transition = "opacity .3s ease,transform .3s ease";
+          mascotBubble.style.opacity = "0";
+          mascotBubble.style.transform = "scale(.6)";
+        }
+        requestAnimationFrame(mascotLoop);
+      }
+      requestAnimationFrame(mascotLoop);
+      setTimeout(
+        () =>
+          mascotSay(`looking at ${proj.shortTitle} — ${proj.cardSay}`, 4200),
+        1000,
+      );
+
+      // Section narration
+      const sections = Array.from(
+        document.querySelectorAll("[data-section-say]"),
+      ).map((el) => ({
+        el,
+        text: el.getAttribute("data-section-say"),
+        last: 0,
+        inside: false,
+      }));
+      window.addEventListener(
+        "scroll",
+        () => {
+          const vh = window.innerHeight || 800,
+            now = performance.now();
+          sections.forEach((s) => {
+            const r = s.el.getBoundingClientRect();
+            const inView = r.top < vh * 0.5 && r.bottom > vh * 0.3;
+            if (inView && !s.inside) {
+              s.inside = true;
+              if (now - s.last > 9000) {
+                s.last = now;
+                mascotSay(s.text, 3600);
+              }
+            } else if (!inView && r.top > vh * 0.6) s.inside = false;
+          });
+        },
+        { passive: true },
+      );
+
+      /* ═══════════════════════════════════════════════════
+   MOTIFS (other deep-dive cards)
+═══════════════════════════════════════════════════ */
+      mountMotifs(document.body);
+    </script>
+  </body>
+</html>

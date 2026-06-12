@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anik Sarker — Senior Software Engineer</title>
+<meta name="description" content="Senior Software Engineer with 6+ years building resilient distributed systems — .NET 8, Angular, microservices, Clean Architecture, DDD & CQRS.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── Design tokens ── */
+:root {
+  --ink-1000:#060708;--ink-950:#0A0C0F;--ink-900:#0E1115;--ink-850:#131820;--ink-800:#181E27;--ink-750:#1E2530;--ink-700:#262E3B;
+  --line-faint:#1A212B;--line:#232C38;--line-strong:#313C4C;
+  --fg-1:#F2F5F8;--fg-2:#AEB8C4;--fg-3:#79838F;--fg-4:#525C68;
+  --cyan-50:#E6FEFE;--cyan-200:#9FF6F2;--cyan-400:#3EE9E2;--cyan-500:#21D9D2;--cyan-600:#16B4AE;--cyan-700:#0F8A85;
+  --magenta-400:#FF6FB3;--magenta-500:#F6479A;--magenta-600:#D52F7E;
+  --green-500:#46DE8B;--amber-500:#FFB224;--red-500:#FF5C5C;--blue-500:#4D9BFF;
+  --glow-cyan:rgba(33,217,210,0.35);--glow-magenta:rgba(246,71,154,0.30);
+  --bg-page:var(--ink-950);--bg-void:var(--ink-1000);
+  --surface-base:var(--ink-900);--surface-card:var(--ink-850);--surface-raised:var(--ink-800);--surface-hover:var(--ink-750);--surface-input:var(--ink-700);
+  --border-subtle:var(--line-faint);--border-default:var(--line);--border-strong:var(--line-strong);
+  --text-primary:var(--fg-1);--text-secondary:var(--fg-2);--text-muted:var(--fg-3);--text-disabled:var(--fg-4);
+  --accent:var(--cyan-500);--accent-hover:var(--cyan-400);--accent-fg:var(--ink-1000);--accent-2:var(--magenta-500);--link:var(--cyan-400);
+  --success:var(--green-500);--warning:var(--amber-500);--danger:var(--red-500);--info:var(--blue-500);
+  --radius-xs:3px;--radius-sm:5px;--radius-md:8px;--radius-lg:12px;--radius-xl:16px;--radius-pill:999px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.40);--shadow-md:0 4px 14px rgba(0,0,0,.45);--shadow-lg:0 12px 34px rgba(0,0,0,.55);--shadow-xl:0 24px 64px rgba(0,0,0,.62);
+  --edge-top:inset 0 1px 0 rgba(255,255,255,.04);
+  --glow-sm:0 0 0 1px rgba(33,217,210,.40),0 0 18px -2px var(--glow-cyan);
+  --glow-md:0 0 0 1px rgba(33,217,210,.55),0 0 32px -4px var(--glow-cyan);
+  --focus-ring:0 0 0 2px var(--bg-page),0 0 0 4px var(--cyan-500);
+  --ease-out:cubic-bezier(.22,1,.36,1);--ease-inout:cubic-bezier(.65,0,.35,1);--ease-snap:cubic-bezier(.34,1.56,.64,1);
+  --dur-fast:120ms;--dur-base:180ms;--dur-slow:280ms;
+  --font-display:'Space Grotesk',system-ui,sans-serif;--font-ui:'Space Grotesk',system-ui,sans-serif;--font-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
+}
+
+/* ── Reset & base ── */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-ui);background:var(--ink-950);color:var(--fg-1);min-height:100vh;overflow-x:hidden}
+::selection{background:rgba(33,217,210,.28);color:var(--fg-1)}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer}
+img,svg{display:block}
+
+/* ── Animations ── */
+@keyframes pxl-blink{50%{opacity:0}}
+@keyframes pxl-glow{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes pxl-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes pxl-rain{to{transform:translateY(110vh)}}
+@keyframes pxl-spin{to{transform:rotate(360deg)}}
+@keyframes pxl-dash{to{stroke-dashoffset:-16}}
+@keyframes mascot-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes mascot-blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+@keyframes mascot-wave{0%,100%{transform:rotate(8deg)}25%{transform:rotate(-38deg)}60%{transform:rotate(-14deg)}}
+@keyframes mascot-pop{0%{transform:scale(.6) translateY(6px);opacity:0}60%{transform:scale(1.06) translateY(0);opacity:1}100%{transform:scale(1) translateY(0);opacity:1}}
+@keyframes reveal-up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+/* ── Timeline accordion ── */
+.tl-head{cursor:pointer;display:flex;align-items:center;gap:11px;width:100%;background:none;border:none;padding:9px 12px 9px 9px;margin:-9px -12px 0 -9px;border-radius:10px;text-align:left;font:inherit;color:inherit;transition:background var(--dur-fast),box-shadow var(--dur-fast);}
+.tl-head:hover{background:linear-gradient(90deg,rgba(33,217,210,.07),rgba(33,217,210,.015) 70%);box-shadow:inset 2px 0 0 var(--cyan-500);}
+.tl-head:hover .tl-chev{color:var(--cyan-400);transform:translateX(2px);}
+.tl-head-main{display:flex;align-items:center;flex-wrap:wrap;gap:9px;min-width:0;}
+.tl-chev{flex:0 0 auto;transition:transform .35s var(--ease-out),color var(--dur-fast);color:var(--fg-3);}
+.tl-entry.open .tl-chev{transform:rotate(90deg);color:var(--cyan-400);}
+.tl-entry.open .tl-head:hover .tl-chev{transform:rotate(90deg) translateX(2px);}
+/* curiosity cue — collapsed entries gently pulse to invite a click */
+.tl-cue{margin-left:auto;flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.03em;color:var(--fg-4);padding:4px 10px;border-radius:999px;border:1px solid var(--border-default);background:var(--surface-raised);white-space:nowrap;transition:color var(--dur-fast),border-color var(--dur-fast),background var(--dur-fast);}
+.tl-cue svg{flex:0 0 auto;transition:transform var(--dur-fast);}
+.tl-head:hover .tl-cue{color:var(--cyan-300);border-color:rgba(33,217,210,.45);background:rgba(33,217,210,.10);}
+.tl-head:hover .tl-cue svg{transform:translateX(2px);}
+.tl-cue-open{display:none;}
+.tl-entry.open .tl-cue-closed{display:none;}
+.tl-entry.open .tl-cue-open{display:inline-flex;}
+.tl-entry.open .tl-cue{color:var(--cyan-400);border-color:rgba(33,217,210,.30);background:rgba(33,217,210,.06);}
+.tl-entry:not(.open) .tl-cue{animation:tl-cue-pulse 2.8s var(--ease-out) infinite;}
+.tl-head:hover .tl-cue{animation:none;}
+@keyframes tl-cue-pulse{0%,100%{box-shadow:0 0 0 0 rgba(33,217,210,0);}55%{box-shadow:0 0 0 4px rgba(33,217,210,.06);}}
+@media (prefers-reduced-motion:reduce){.tl-entry:not(.open) .tl-cue{animation:none;}}
+.tl-body{overflow:hidden;max-height:0;opacity:0;transition:max-height .5s var(--ease-out),opacity .4s var(--ease-out),margin-top .5s var(--ease-out);margin-top:0;}
+.tl-entry.open .tl-body{max-height:760px;opacity:1;margin-top:12px;}
+/* staggered bullet reveal on expand */
+.tl-bullet{opacity:0;transform:translateY(7px);transition:opacity .42s var(--ease-out),transform .42s var(--ease-out);}
+.tl-entry.open .tl-bullet{opacity:1;transform:none;}
+.tl-entry.open .tl-bullet:nth-child(1){transition-delay:.10s;}
+.tl-entry.open .tl-bullet:nth-child(2){transition-delay:.17s;}
+.tl-entry.open .tl-bullet:nth-child(3){transition-delay:.24s;}
+.tl-entry.open .tl-bullet:nth-child(4){transition-delay:.31s;}
+.tl-entry.open .tl-bullet:nth-child(5){transition-delay:.38s;}
+@media (prefers-reduced-motion:reduce){.tl-bullet{transition:opacity .2s linear;transform:none;}}
+.tl-hint{font-family:var(--font-mono);font-size:10.5px;color:var(--fg-4);transition:color var(--dur-fast);}
+.tl-entry.open .tl-hint{color:var(--cyan-500);}
+
+/* ── Utilities ── */
+.pxl-link:hover{color:var(--cyan-400) !important}
+.pxl-nav{display:inline-block;padding:8px 12px;color:var(--fg-3);font-size:13.5px;font-weight:500;transition:color var(--dur-fast)}
+.pxl-nav:hover{color:var(--fg-1)}
+.pxl-cta{display:inline-flex;align-items:center;height:46px;padding:0 22px;background:var(--accent);color:var(--accent-fg);font-size:15px;font-weight:600;border-radius:var(--radius-md);box-shadow:var(--shadow-sm);transition:background var(--dur-fast),box-shadow var(--dur-base);border:none}
+.pxl-cta:hover{background:var(--cyan-400);box-shadow:0 0 0 1px rgba(33,217,210,.5),0 0 26px -6px var(--glow-cyan)}
+.pxl-cta:active{transform:translateY(.5px) scale(.985)}
+.pxl-ghost{display:inline-flex;align-items:center;height:46px;padding:0 20px;background:var(--surface-raised);color:var(--fg-1);font-size:15px;font-weight:600;border:1px solid var(--border-strong);border-radius:var(--radius-md);box-shadow:var(--edge-top);transition:background var(--dur-fast),border-color var(--dur-fast)}
+.pxl-ghost:hover{background:var(--surface-hover);border-color:var(--border-strong)}
+.pxl-ghost:active{transform:translateY(.5px) scale(.985)}
+.pxl-btn-sm{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;background:var(--surface-raised);border:1px solid var(--border-default);border-radius:var(--radius-md);color:var(--fg-3);box-shadow:var(--edge-top);transition:color var(--dur-fast),border-color var(--dur-fast)}
+.pxl-btn-sm:hover{color:var(--cyan-400);border-color:var(--border-strong)}
+.pxl-proj{transition:transform var(--dur-base) var(--ease-out),border-color var(--dur-base) var(--ease-out),box-shadow var(--dur-base) var(--ease-out)}
+.pxl-proj:hover{transform:translateY(-4px);border-color:var(--border-strong) !important;box-shadow:var(--edge-top),var(--shadow-lg) !important}
+.pxl-proj:hover .pxl-arrow{transform:translate(3px,-3px);color:var(--cyan-400) !important}
+.pxl-proj:hover .pxl-cover{opacity:1 !important}
+.pxl-cap{transition:transform var(--dur-base) var(--ease-out),border-color var(--dur-base) var(--ease-out)}
+.pxl-cap:hover{transform:translateY(-3px);border-color:rgba(33,217,210,.4) !important}
+.pxl-chip{transition:color var(--dur-fast),border-color var(--dur-fast),background var(--dur-fast)}
+.pxl-chip:hover{color:var(--cyan-400) !important;border-color:rgba(33,217,210,.4) !important;background:rgba(33,217,210,.08) !important}
+.pxl-prod:hover{background:rgba(70,222,139,.2) !important;border-color:rgba(70,222,139,.72) !important;box-shadow:0 0 16px -4px rgba(70,222,139,.6)}
+
+/* ── Reveal ── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+.reveal.in{opacity:1;transform:none}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--ink-900)}
+::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- ── MASCOT ── -->
+<div id="mascot" style="position:fixed;left:0;top:0;z-index:99998;pointer-events:none;will-change:transform;">
+  <div id="mascot-bob" style="position:relative;animation:mascot-bob 3.2s var(--ease-inout) infinite;">
+    <div id="mascot-bubble" style="position:absolute;left:40px;bottom:44px;min-width:90px;max-width:232px;padding:9px 12px;background:var(--ink-1000);border:1px solid rgba(33,217,210,.45);border-radius:12px 12px 12px 3px;box-shadow:0 0 0 1px rgba(33,217,210,.10),0 10px 30px -8px rgba(0,0,0,.7);font-family:var(--font-mono);font-size:12px;line-height:1.5;letter-spacing:-.01em;color:var(--fg-1);opacity:0;transform:scale(.6);transform-origin:left bottom;pointer-events:none;white-space:normal;transition:opacity .3s ease,transform .3s ease;">
+      <span style="position:absolute;top:6px;left:-6px;width:11px;height:11px;color:var(--cyan-500);font-size:11px;">❯</span>
+      <span id="mascot-say"></span>
+    </div>
+    <svg width="52" height="64" viewBox="0 0 46 60" fill="none" style="display:block;filter:drop-shadow(0 0 14px rgba(33,217,210,.28)) drop-shadow(0 6px 12px rgba(0,0,0,.5));">
+      <g id="mascot-face" style="transform-box:fill-box;transform-origin:center;">
+        <line x1="23" y1="13" x2="23" y2="5" stroke="var(--cyan-500)" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="23" cy="3.4" r="3.1" fill="var(--cyan-400)"><animate attributeName="opacity" values="1;.45;1" dur="1.4s" repeatCount="indefinite"/></circle>
+        <rect x="5.5" y="12" width="35" height="27" rx="8" fill="var(--ink-850)" stroke="var(--cyan-600)" stroke-width="1.4"/>
+        <rect x="9.5" y="16" width="27" height="19" rx="5" fill="var(--ink-1000)" stroke="rgba(33,217,210,.18)" stroke-width="1"/>
+        <g id="mascot-eyes" style="animation:mascot-blink 4.6s steps(1,end) 1.2s infinite;">
+          <rect x="13.5" y="20.5" width="5.4" height="7" rx="2.4" fill="var(--cyan-400)" style="filter:drop-shadow(0 0 4px rgba(33,217,210,.7));"/>
+          <rect x="27.1" y="20.5" width="5.4" height="7" rx="2.4" fill="var(--cyan-400)" style="filter:drop-shadow(0 0 4px rgba(33,217,210,.7));"/>
+        </g>
+        <path id="mascot-mouth" d="M18.5 31 Q23 33.4 27.5 31" stroke="var(--cyan-500)" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+      </g>
+      <rect x="2" y="40" width="6.2" height="4.2" rx="2.1" fill="var(--ink-700)" stroke="var(--line)" stroke-width="1"/>
+      <g id="mascot-arm" style="transform-box:fill-box;transform-origin:90% 18%;">
+        <rect x="37.8" y="40" width="6.2" height="4.2" rx="2.1" fill="var(--cyan-600)" stroke="var(--cyan-500)" stroke-width=".8"/>
+      </g>
+      <rect x="12" y="40" width="22" height="15" rx="6" fill="var(--ink-800)" stroke="var(--line)" stroke-width="1.2"/>
+      <rect x="20" y="44.5" width="6" height="6" rx="2" fill="none" stroke="var(--cyan-600)" stroke-width="1.2"/>
+      <circle cx="23" cy="47.5" r="1.3" fill="var(--cyan-400)"><animate attributeName="opacity" values=".5;1;.5" dur="1.8s" repeatCount="indefinite"/></circle>
+      <rect x="16" y="55" width="4.5" height="4" rx="1.6" fill="var(--ink-700)"/>
+      <rect x="25.5" y="55" width="4.5" height="4" rx="1.6" fill="var(--ink-700)"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+<header style="position:sticky;top:0;z-index:9000;backdrop-filter:blur(14px) saturate(140%);background:rgba(10,12,15,.72);border-bottom:1px solid var(--border-subtle);">
+  <nav style="max-width:1180px;margin:0 auto;height:62px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+    <a href="#top" class="pxl-link" style="display:flex;align-items:center;gap:9px;color:var(--fg-1);font-family:var(--font-mono);font-size:15px;font-weight:600;letter-spacing:-.01em;">
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border:1px solid var(--border-strong);border-radius:7px;background:var(--surface-raised);box-shadow:var(--edge-top);">
+        <span style="width:7px;height:7px;background:var(--cyan-400);border-radius:2px;box-shadow:0 0 8px var(--cyan-500);"></span>
+      </span>
+      anik<span style="color:var(--cyan-400);">·</span>sarker
+    </a>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <a href="#build" class="pxl-nav">What I build</a>
+      <a href="#ship" class="pxl-nav">How I ship</a>
+      <a href="#work" class="pxl-nav">Work</a>
+      <a href="#path" class="pxl-nav">Path</a>
+      <button id="btn-term" class="pxl-btn-sm" data-mascot-say="psst — try the terminal. or the konami code ;)" title="Open terminal (backtick)" style="margin-left:4px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg>
+      </button>
+      <button id="btn-sound" class="pxl-btn-sm" title="Toggle sound">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path id="sound-wave" d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>
+      </button>
+      <a href="#contact" class="pxl-cta" style="margin-left:6px;gap:0;height:36px;padding:0 16px;font-size:13.5px;">Get in touch</a>
+    </div>
+  </nav>
+</header>
+
+<!-- ── HERO ── -->
+<section id="top" style="position:relative;max-width:1180px;margin:0 auto;padding:96px 24px 64px;overflow:hidden;">
+  <div style="position:absolute;inset:-40px 0 auto 0;height:560px;background-image:url('assets/grid-tile.svg');background-size:34px 34px;-webkit-mask-image:radial-gradient(120% 80% at 60% 0%,#000 0%,transparent 70%);mask-image:radial-gradient(120% 80% at 60% 0%,#000 0%,transparent 70%);opacity:.5;pointer-events:none;"></div>
+  <div style="position:absolute;top:-120px;left:50%;transform:translateX(-30%);width:760px;height:460px;background:radial-gradient(closest-side,rgba(33,217,210,.16),transparent 75%);pointer-events:none;"></div>
+  <div style="position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;">
+    <div class="reveal">
+      <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:22px;">
+        <!-- Badge: open to senior roles -->
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:var(--radius-pill);background:rgba(33,217,210,.10);border:1px solid rgba(33,217,210,.32);font-family:var(--font-mono);font-size:11.5px;color:var(--cyan-400);">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--cyan-500);animation:pxl-glow 1.6s infinite;"></span>
+          open to senior roles
+        </span>
+        <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-4);">// kuala lumpur · MY</span>
+      </div>
+      <h1 data-mascot-say="6+ years building backends that stay up — .NET 8, Angular & microservices, from git push to live." style="font-family:var(--font-display);font-weight:700;font-size:clamp(40px,6vw,72px);line-height:1.02;letter-spacing:-.03em;color:var(--fg-1);">
+        I build backends<br>that don't <span style="color:var(--cyan-400);text-shadow:0 0 28px rgba(33,217,210,.45);">blink.</span>
+      </h1>
+      <p style="margin:22px 0 0;max-width:520px;font-size:17px;line-height:1.6;color:var(--fg-2);">
+        Senior Software Engineer, 6+ years. I architect resilient distributed systems with <strong style="color:var(--fg-1);font-weight:600;">.NET&nbsp;8</strong>, <strong style="color:var(--fg-1);font-weight:600;">Angular</strong> &amp; microservices — Clean Architecture, DDD &amp; CQRS, from <code style="font-family:var(--font-mono);color:var(--cyan-400);">git&nbsp;push</code> to live.
+      </p>
+      <div style="margin-top:16px;font-family:var(--font-mono);font-size:15px;color:var(--fg-3);height:24px;">
+        <span style="color:var(--cyan-500);">❯</span> building <span id="type-text" style="color:var(--fg-1);"></span><span id="type-caret" style="display:inline-block;width:8px;height:15px;transform:translateY(2px);margin-left:1px;background:var(--cyan-400);animation:pxl-blink 1.05s steps(1) infinite;"></span>
+      </div>
+      <div style="margin-top:30px;display:flex;flex-wrap:wrap;gap:12px;">
+        <a href="#work" class="pxl-cta" data-mascot-say="this way to the projects →" style="gap:8px;">
+          View the work
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="Anik-Sarker-Resume.pdf" class="pxl-ghost" download style="gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+          Résumé
+        </a>
+      </div>
+      <div style="margin-top:40px;display:grid;grid-template-columns:repeat(4,auto);gap:30px;width:fit-content;">
+        <div><div style="display:flex;align-items:baseline;font-family:var(--font-display);font-weight:700;font-size:30px;letter-spacing:-.02em;color:var(--fg-1);"><span data-count="6">0</span><span style="color:var(--cyan-400);">+</span></div><div style="margin-top:2px;font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3);">years</div></div>
+        <div><div style="display:flex;align-items:baseline;font-family:var(--font-display);font-weight:700;font-size:30px;letter-spacing:-.02em;color:var(--fg-1);"><span data-count="11">0</span></div><div style="margin-top:2px;font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3);">projects</div></div>
+        <div><div style="display:flex;align-items:baseline;font-family:var(--font-display);font-weight:700;font-size:30px;letter-spacing:-.02em;color:var(--fg-1);"><span data-count="5">0</span></div><div style="margin-top:2px;font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3);">companies</div></div>
+        <div><div style="display:flex;align-items:baseline;font-family:var(--font-display);font-weight:700;font-size:30px;letter-spacing:-.02em;color:var(--fg-1);"><span data-count="4">0</span></div><div style="margin-top:2px;font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3);">domains</div></div>
+      </div>
+    </div>
+    <!-- Hero terminal -->
+    <div class="reveal" style="position:relative;animation:pxl-float 6s var(--ease-inout) infinite;">
+      <div style="background:var(--ink-1000);border:1px solid var(--border-default);border-radius:var(--radius-lg);box-shadow:var(--edge-top),var(--shadow-xl);overflow:hidden;">
+        <div style="display:flex;align-items:center;gap:8px;height:38px;padding:0 14px;background:var(--surface-base);border-bottom:1px solid var(--border-subtle);">
+          <span style="display:flex;gap:7px;"><i style="width:11px;height:11px;border-radius:50%;background:#FF5F57;display:block;"></i><i style="width:11px;height:11px;border-radius:50%;background:#FEBC2E;display:block;"></i><i style="width:11px;height:11px;border-radius:50%;background:#28C840;display:block;"></i></span>
+          <span style="margin-left:6px;font-family:var(--font-mono);font-size:12px;color:var(--fg-3);">anik@kl ~ %</span>
+        </div>
+        <div style="padding:16px 18px;font-family:var(--font-mono);font-size:13px;line-height:1.7;min-height:200px;">
+          <div style="color:var(--fg-3);">// senior software engineer · 6+ yrs</div>
+          <div><span style="color:var(--cyan-500);">❯</span> <span style="color:var(--fg-1);">whoami</span></div>
+          <div style="color:var(--green-500);">anik sarker</div>
+          <div><span style="color:var(--cyan-500);">❯</span> <span style="color:var(--fg-1);">cat role.txt</span></div>
+          <div style="color:var(--fg-2);">building scalable, secure cloud-native SaaS</div>
+          <div style="color:var(--fg-2);">via Clean Architecture · DDD · CQRS</div>
+          <div><span style="color:var(--cyan-500);">❯</span> <span style="color:var(--fg-1);">pxl status --prod</span></div>
+          <div style="color:var(--cyan-400);">● live · BMW Group Malaysia</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHAT I BUILD ── -->
+<section id="build" data-section-say="this is the toolbox — six layers of the stack i build across, backend to observability. hover a card!" style="max-width:1180px;margin:0 auto;padding:64px 24px;">
+  <div class="reveal" style="margin-bottom:36px;">
+    <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan-500);margin-bottom:12px;">// the toolbox</div>
+    <h2 style="font-family:var(--font-display);font-weight:700;font-size:clamp(28px,4vw,42px);letter-spacing:-.025em;color:var(--fg-1);">What I build with</h2>
+    <p style="margin:12px 0 0;max-width:560px;font-size:16px;line-height:1.6;color:var(--fg-2);">Six layers of the stack, end to end — from domain models to dashboards to the pipelines that ship them.</p>
+  </div>
+  <div id="caps-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;"></div>
+</section>
+
+<!-- ── HOW I SHIP ── -->
+<section id="ship" data-section-say="every commit walks this exact pipeline, live — build, test, containerize, ship. zero downtime." style="position:relative;padding:72px 24px;background:var(--ink-900);border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle);">
+  <div style="max-width:1180px;margin:0 auto;">
+    <div class="reveal" style="margin-bottom:36px;">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan-500);margin-bottom:12px;">// the loop</div>
+      <h2 style="font-family:var(--font-display);font-weight:700;font-size:clamp(28px,4vw,42px);letter-spacing:-.025em;color:var(--fg-1);">From <code style="font-family:var(--font-mono);color:var(--cyan-400);">git push</code> to live, in seconds</h2>
+      <p style="margin:12px 0 0;max-width:600px;font-size:16px;line-height:1.6;color:var(--fg-2);">Every commit walks the same path: build, test, containerize, roll out — zero downtime. Here's that pipeline, live.</p>
+    </div>
+    <!-- Pipeline SVG -->
+    <div id="pipe-container" class="reveal" data-mascot-say="a packet of code flowing through the pipeline — each stage lights up as it passes, green when it's shipped." style="padding:30px 24px;background:var(--surface-card);border:1px solid var(--border-default);border-radius:14px;box-shadow:var(--edge-top),var(--shadow-md);margin-bottom:18px;">
+      <svg id="pipe-svg" viewBox="0 0 1080 150" style="width:100%;height:auto;display:block;">
+        <line x1="70" y1="58" x2="1010" y2="58" stroke="var(--line)" stroke-width="2"/>
+        <line id="pipe-fill" x1="70" y1="58" x2="70" y2="58" stroke="var(--cyan-500)" stroke-width="2.5" stroke-linecap="round" style="filter:drop-shadow(0 0 6px rgba(33,217,210,.6));"/>
+        <g id="pipe-stages"></g>
+        <circle id="pipe-packet" cx="70" cy="58" r="6" fill="#6df2ec" style="filter:drop-shadow(0 0 8px rgba(33,217,210,.9));opacity:0;"/>
+      </svg>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+      <!-- Deploy terminal -->
+      <div class="reveal" style="background:var(--ink-1000);border:1px solid var(--border-default);border-radius:12px;box-shadow:var(--edge-top),var(--shadow-lg);overflow:hidden;">
+        <div style="display:flex;align-items:center;gap:8px;height:38px;padding:0 14px;background:var(--surface-base);border-bottom:1px solid var(--border-subtle);">
+          <span style="display:flex;gap:7px;"><i style="width:11px;height:11px;border-radius:50%;background:#FF5F57;display:block;"></i><i style="width:11px;height:11px;border-radius:50%;background:#FEBC2E;display:block;"></i><i style="width:11px;height:11px;border-radius:50%;background:#28C840;display:block;"></i></span>
+          <span style="margin-left:6px;font-family:var(--font-mono);font-size:12px;color:var(--fg-3);">deploy — production</span>
+        </div>
+        <div id="deploy-term" data-mascot-say="a real production deploy: git push, dotnet build, xUnit, rolling update. live in 2.1s." style="padding:16px 18px;font-family:var(--font-mono);font-size:13px;line-height:1.7;min-height:188px;color:var(--fg-2);"></div>
+      </div>
+      <!-- Observability -->
+      <div class="reveal" data-mascot-say="live request rate with P99 latency — the kind of telemetry OpenTelemetry, Jaeger & Serilog give you." style="position:relative;padding:20px;background:var(--surface-card);border:1px solid var(--border-default);border-radius:12px;box-shadow:var(--edge-top),var(--shadow-sm);display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3);">live · req/s</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;color:var(--green-500);"><i style="width:6px;height:6px;border-radius:50%;background:var(--green-500);box-shadow:0 0 8px var(--green-500);animation:pxl-glow 1.6s infinite;display:block;"></i>healthy</span>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:14px;">
+          <span id="rps-val" style="font-family:var(--font-display);font-weight:700;font-size:34px;letter-spacing:-.02em;color:var(--fg-1);">0</span>
+          <span style="font-family:var(--font-mono);font-size:12px;color:var(--fg-4);">P99 <span id="p99-val" style="color:var(--cyan-400);">64</span>ms</span>
+        </div>
+        <svg viewBox="0 0 320 90" preserveAspectRatio="none" style="width:100%;height:90px;display:block;">
+          <polyline id="spark-fill" points="" fill="rgba(33,217,210,.10)" stroke="none"/>
+          <polyline id="spark-line" points="" fill="none" stroke="var(--cyan-500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 5px rgba(33,217,210,.45));"/>
+        </svg>
+        <div style="display:flex;gap:16px;margin-top:12px;font-family:var(--font-mono);font-size:11px;color:var(--fg-3);">
+          <span>OpenTelemetry</span><span style="color:var(--fg-4)">·</span><span>Jaeger</span><span style="color:var(--fg-4)">·</span><span>Serilog</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WORK ── -->
+<section id="work" data-section-say="11 projects across healthcare, fintech, cloud & e-commerce. the green dots are live in production — click them!" style="max-width:1180px;margin:0 auto;padding:80px 24px 48px;">
+  <div class="reveal" style="margin-bottom:14px;">
+    <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan-500);margin-bottom:12px;">// selected work · 13 projects</div>
+    <h2 style="font-family:var(--font-display);font-weight:700;font-size:clamp(28px,4vw,42px);letter-spacing:-.025em;color:var(--fg-1);">Things I've shipped</h2>
+    <p style="margin:12px 0 0;max-width:560px;font-size:16px;line-height:1.6;color:var(--fg-2);">Across healthcare, fintech, cloud infra &amp; e-commerce. The flagship four open a deep-dive with a live architecture diagram.</p>
+  </div>
+  <div id="work-grid"></div>
+</section>
+
+<!-- ── PATH ── -->
+<section id="path" data-section-say="the path so far — four companies and a CS degree. hover any role for the highlights." style="max-width:1180px;margin:0 auto;padding:64px 24px;">
+  <div class="reveal" style="margin-bottom:40px;">
+    <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan-500);margin-bottom:12px;">// experience &amp; education</div>
+    <h2 style="font-family:var(--font-display);font-weight:700;font-size:clamp(28px,4vw,42px);letter-spacing:-.025em;color:var(--fg-1);">Six years, four companies &amp; a CS degree</h2>
+    <p style="margin:12px 0 0;max-width:560px;font-size:15px;line-height:1.6;color:var(--fg-2);">Each role hides its own set of wins — <span style="color:var(--cyan-400);">tap any one to unfold the highlights</span>.</p>
+  </div>
+  <div id="timeline" style="position:relative;padding-left:28px;">
+    <div style="position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line);"></div>
+    <div id="timeline-fill" style="position:absolute;left:5px;top:6px;width:2px;height:0;background:linear-gradient(var(--cyan-500),var(--cyan-700));box-shadow:0 0 8px rgba(33,217,210,.5);transition:height .6s var(--ease-out);"></div>
+    <div id="timeline-entries"></div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact" data-section-say="want to build something hard? email is the fastest way to reach anik. go on!" style="max-width:1180px;margin:0 auto;padding:56px 24px 90px;">
+  <div class="reveal" style="position:relative;padding:48px 40px;background:var(--surface-card);border:1px solid var(--border-default);border-radius:16px;box-shadow:var(--edge-top),0 0 0 1px rgba(33,217,210,.10),0 0 50px -16px var(--glow-cyan);overflow:hidden;">
+    <div style="position:absolute;inset:0;background-image:url('assets/grid-tile.svg');background-size:30px 30px;-webkit-mask-image:radial-gradient(80% 120% at 0% 0%,#000,transparent 60%);mask-image:radial-gradient(80% 120% at 0% 0%,#000,transparent 60%);opacity:.4;pointer-events:none;"></div>
+    <div style="position:relative;">
+      <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan-500);margin-bottom:14px;">// let's build something</div>
+      <h2 style="font-family:var(--font-display);font-weight:700;font-size:clamp(26px,3.6vw,40px);letter-spacing:-.025em;color:var(--fg-1);">Have a hard systems problem?</h2>
+      <p style="margin:12px 0 0;max-width:520px;font-size:16px;line-height:1.6;color:var(--fg-2);">I'm open to senior &amp; lead engineering roles and architecture conversations. The fastest way to reach me is email.</p>
+      <div style="margin-top:26px;display:flex;flex-wrap:wrap;gap:12px;">
+        <a href="mailto:ach6266@gmail.com" class="pxl-cta" data-mascot-say="go on — say hi!" style="gap:9px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+          ach6266@gmail.com
+        </a>
+        <a href="https://www.linkedin.com/in/sarkeranik" target="_blank" rel="noopener" class="pxl-ghost">LinkedIn</a>
+        <a href="https://github.com/sarkeranik" target="_blank" rel="noopener" class="pxl-ghost">GitHub</a>
+        <a href="Anik-Sarker-Resume.pdf" download class="pxl-ghost">Résumé ↓</a>
+      </div>
+    </div>
+  </div>
+  <footer style="margin-top:40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--font-mono);font-size:12px;color:var(--fg-4);">
+    <span>anik<span style="color:var(--cyan-500);">·</span>sarker — senior software engineer</span>
+    <span id="uptime-display">uptime 99.98% · built with too much caffeine</span>
+  </footer>
+</section>
+
+<!-- ── TERMINAL OVERLAY (easter egg) ── -->
+<div id="term-overlay" style="position:fixed;inset:0;z-index:99990;display:none;align-items:center;justify-content:center;background:rgba(4,5,6,.74);backdrop-filter:blur(6px);padding:24px;">
+  <div style="width:100%;max-width:640px;background:var(--ink-1000);border:1px solid rgba(33,217,210,.30);border-radius:12px;box-shadow:0 0 0 1px rgba(33,217,210,.12),0 30px 80px -20px rgba(0,0,0,.8);overflow:hidden;">
+    <div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;background:var(--surface-base);border-bottom:1px solid var(--border-subtle);">
+      <span style="display:flex;gap:7px;"><i style="width:11px;height:11px;border-radius:50%;background:#FF5F57;display:block;"></i><i style="width:11px;height:11px;border-radius:50%;background:#FEBC2E;display:block;"></i><i style="width:11px;height:11px;border-radius:50%;background:#28C840;display:block;"></i></span>
+      <span style="margin-left:6px;font-family:var(--font-mono);font-size:12px;color:var(--fg-3);">anik@portfolio — try: help</span>
+      <button id="btn-close-term" style="margin-left:auto;background:none;border:none;color:var(--fg-4);cursor:pointer;font-family:var(--font-mono);font-size:16px;">✕</button>
+    </div>
+    <div id="term-out" style="padding:16px 18px;font-family:var(--font-mono);font-size:13px;line-height:1.7;color:var(--fg-2);height:320px;overflow-y:auto;"></div>
+    <div style="display:flex;align-items:center;gap:8px;padding:0 18px 16px;">
+      <span style="color:var(--cyan-500);font-family:var(--font-mono);font-size:13px;">❯</span>
+      <input id="term-input" spellcheck="false" autocomplete="off" style="flex:1;background:none;border:none;outline:none;color:var(--fg-1);font-family:var(--font-mono);font-size:13px;" placeholder="type a command…"/>
+    </div>
+  </div>
+</div>
+
+<!-- ── RAIN ── -->
+<div id="rain" style="position:fixed;inset:0;z-index:99980;pointer-events:none;overflow:hidden;"></div>
+
+<script type="module">
+/* ── Data ── */
+const CAPS = [
+  { title:'Backend & APIs', say:'this is where i live — .NET 8 all day', blurb:'.NET 8 microservices in Clean Architecture — CQRS with MediatR, rich DDD domain models, versioned REST.', tags:['.NET 8','ASP.NET Core','CQRS','MediatR','SignalR'], icon:'<path d="M4 17l6-6-6-6"/><path d="M12 19h8"/>' },
+  { title:'Frontend', say:'Angular, NgRx, real-time dashboards', blurb:'Angular (v9–17) & Next.js with NgRx state, RxJS streams, and live ECharts/D3 data visualization.', tags:['Angular','NgRx','RxJS','TypeScript','ECharts'], icon:'<path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/>' },
+  { title:'Cloud & DevOps', say:'docker, k8s, zero-downtime rollouts', blurb:'Containerized delivery with Docker, Kubernetes, Helm & ArgoCD — CI/CD via GitHub Actions, Werf & Azure DevOps.', tags:['Docker','Kubernetes','ArgoCD','CI/CD','AWS'], icon:'<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/>' },
+  { title:'Security & Auth', say:'OAuth2, JWT, fine-grained RBAC', blurb:'Enterprise OAuth2/OIDC with Zitadel, JWT validation, and feature-level Casbin RBAC across multi-tenant systems.', tags:['OAuth2/OIDC','JWT','Zitadel','Casbin RBAC'], icon:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>' },
+  { title:'Data & Messaging', say:'event-driven, cached, consistent', blurb:'PostgreSQL & SQL Server via EF Core, Redis caching, and Kafka/RabbitMQ event-driven pipelines.', tags:['PostgreSQL','EF Core','Redis','Kafka','RabbitMQ'], icon:'<path d="M3 5c0-1.66 4.03-3 9-3s9 1.34 9 3v14c0 1.66-4.03 3-9 3s-9-1.34-9-3z"/><path d="M3 5c0 1.66 4.03 3 9 3s9-1.34 9-3"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/>' },
+  { title:'Observability', say:'if it moves, i trace it', blurb:'End-to-end distributed tracing with OpenTelemetry + Jaeger and structured Serilog logging for proactive incident detection.', tags:['OpenTelemetry','Jaeger','Serilog'], icon:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>' },
+];
+
+const LIVE_MAP = {
+  'MIRA':'https://sweya.ai/products/mira','Clappit':'https://sweya.ai/products/clappit',
+  'GSK Expense':'https://sweya.ai/products/regulatory-ai','GSK Order':'https://sweya.ai/products/regulatory-ai',
+  'VerifID':'https://leads.com.bd/banking-solutions/digital-onboarding-ekyc-solution/',
+  'Dhaka Bank':'https://ezybank.dhakabank.com.bd/ekyc/Home/Login','IPDC Finance':'https://ipdc.com/',
+  'Southeast Bank':'https://www.southeastbank.com.bd/?page=seb_mobile_app',
+  'Apex':'https://www.apex4u.com/','Shwapno':'https://www.shwapno.com/','Sailor':'https://www.sailor.clothing/',
+};
+const RESEARCH = new Set(['Computer Vision Research','Data Mining & ML']);
+
+const CATEGORIES = [
+  { label:'Enterprise & SaaS', count:'04', cols:2, items:[
+    { name:'MIRA', motif:'radar', motifLabel:'live · tracking', flagship:true, href:'project-detail.html#mira', say:'real-time hospital asset tracking — my favourite', meta:'Sweya AI · Technical Lead · 2025', blurb:'Real-time indoor asset tracking for hospitals — .NET 8 Clean Architecture, SignalR live location, NgRx dashboards.', tech:['.NET 8','Angular','SignalR','OpenTelemetry'], impact:'Zero-downtime hospital-grade tracking' },
+    { name:'Clappit', motif:'deploy', motifLabel:'rolling deploy', flagship:true, href:'project-detail.html#clappit', say:"I was founding engineer here · built ClappBot", meta:'Sweya AI · Founding Engineer · 2022', blurb:'AI-powered cloud infra SaaS. Nx monorepo, DDD backend, ClappBot deploy chatbot on Rasa.', tech:['.NET Core','Kubernetes','Kafka','Rasa AI'], impact:'+70% user engagement via ClappBot' },
+    { name:'GSK Expense', motif:'approve', motifLabel:'approvals', flagship:true, href:'project-detail.html#gsk-expense', say:'Casbin RBAC + SignalR for a pharma giant', meta:'Sweya AI · Sr. SE → TL · 2023–25', blurb:'Secure expense management for GSK — DDD .NET backend, Casbin feature-level RBAC, real-time SignalR.', tech:['.NET','DDD','Casbin','Angular 17'], impact:'Fully auditable · instant approvals' },
+    { name:'GSK Order', motif:'kafka', motifLabel:'order events', flagship:true, href:'project-detail.html#gsk-order', say:'Kafka-driven order management, CQRS end-to-end', meta:'Sweya AI · Sr. SE → TL · 2023–25', blurb:'Layered DDD order management — Kafka event streaming, CQRS, ArgoCD GitOps on Kubernetes.', tech:['.NET','Kafka','CQRS','ArgoCD'], impact:'Event-driven · GitOps rollouts' },
+  ]},
+  { label:'Banking & FinTech', count:'04', cols:4, items:[
+    { name:'VerifID', motif:'scan', motifLabel:'eKYC · scan', flagship:false, href:'project-detail.html#verifid', say:'multi-tenant eKYC across banks', meta:'Sweya AI · Multi-bank', blurb:'Multi-tenant eKYC with Google Vision AI + OCR.', tech:['Vue.js','.NET','Vision AI'], impact:'Multi-tenant onboarding' },
+    { name:'Dhaka Bank', motif:'scan', motifLabel:'eKYC · scan', flagship:false, href:'project-detail.html#dhaka-bank', say:'EZYBANK — biometric onboarding', meta:'LEADS · 2020–21', blurb:'EZYBANK eKYC — OCR, biometric, RabbitMQ events.', tech:['Vue.js','.NET Core','OCR'], impact:'Days → minutes onboarding' },
+    { name:'IPDC Finance', motif:'scan', motifLabel:'eKYC · scan', flagship:false, href:'project-detail.html#ipdc-finance', say:'NID OCR + face matching · under 5 min', meta:'LEADS · 2020–21', blurb:'eKYC with Vision OCR, NLP, liveness & face match.', tech:['Vue.js','.NET','Ocelot'], impact:'< 5 min digital KYC' },
+    { name:'Southeast Bank', motif:'scan', motifLabel:'eKYC · scan', flagship:false, href:'project-detail.html#southeast-bank', say:'face-match onboarding on Oracle DB', meta:'LEADS · 2020–21', blurb:'eKYC with OCR + face matching on Oracle DB.', tech:['Vue.js','.NET','Oracle'], impact:'Compliant digital onboarding' },
+  ]},
+  { label:'E-Commerce', count:'03', cols:3, items:[
+    { name:'Apex', motif:'cart', motifLabel:'add to cart', flagship:false, href:'project-detail.html#apex', say:'100k+ weekly visitors on nopCommerce', meta:'Brain Station 23 · Apex Footwear', blurb:'nopCommerce storefront — Redis cache, AWS auto-scaling, Facebook API.', tech:['nopCommerce','.NET','Redis','AWS'], impact:'100k+ weekly visitors' },
+    { name:'Shwapno', motif:'cart', motifLabel:'add to cart', flagship:false, href:'project-detail.html#shwapno', say:'grocery e-commerce at scale', meta:'Brain Station 23 · ACI Logistics', blurb:'High-availability storefront with AWS auto-scaling.', tech:['nopCommerce','.NET','AWS'], impact:'10k+ concurrent users' },
+    { name:'Sailor', motif:'cart', motifLabel:'add to cart', flagship:false, href:'project-detail.html#sailor', say:'fashion retail · Knawat integration', meta:'Brain Station 23 · Sailor', blurb:'Fashion storefront with Knawat API & Angular UI.', tech:['nopCommerce','Angular','AWS'], impact:'Responsive multi-client storefront' },
+  ]},
+  { label:'Academic & Research', count:'02', cols:2, items:[
+    { name:'Computer Vision Research', motif:'pose', motifLabel:'pose est.', flagship:false, href:'project-detail.html#cv-research', say:'where it all started — human pose estimation', meta:'AIUB · 2019–20', blurb:'Research: "Dynamic Recovering of Body Configurations by Combining Segmentation and Recognition."', tech:['Computer Vision','Segmentation'], impact:'Published academic research' },
+    { name:'Data Mining & ML', motif:'cluster', motifLabel:'clustering', flagship:false, href:'project-detail.html#data-mining', say:'supervised + unsupervised ML projects', meta:'AIUB · 2019–20', blurb:'Heart Disease Finder (supervised) + dietary clustering (unsupervised).', tech:['ML','Data Mining'], impact:'GPA 3.58/4.0 · CS' },
+  ]},
+];
+
+const TIMELINE = [
+  { kind:'work', company:'BMW Group Malaysia', role:'Senior Software Developer', period:'Jul 2025 – Present', place:'Cyberjaya, Selangor · Hybrid', say:"currently at BMW — backend API ecosystems for global automotive finance, all .NET 8 + Clean Architecture.", summary:'Engineering robust, high-performance backend API ecosystems for global automotive financial platforms as part of a distributed Agile engineering team.', bullets:['Designing scalable REST APIs & microservices in .NET 8 with Clean Architecture (API · Application · Domain · Infrastructure).','CQRS with MediatR and rich DDD domain models for complex automotive-finance transaction logic.','Securing endpoints with OAuth2/OIDC, JWT & fine-grained RBAC; EF Core LINQ + index tuning for high throughput.','Async message-driven flows over RabbitMQ/Kafka and reliable scheduled jobs with Hangfire.','Zero-downtime Azure DevOps CI/CD, strict PR review flow, and full Swagger/OpenAPI + Serilog observability.'], tags:['.NET 8','ASP.NET Core','Microservices','Clean Architecture','CQRS','DDD','Azure DevOps','OAuth2/OIDC','EF Core','RabbitMQ','Hangfire'] },
+  { kind:'work', company:'Sweya AI', role:'Technical Lead', period:'Jan 2025 – Jun 2025', place:'India · Remote', say:"Tech Lead at Sweya — architected & shipped MIRA end-to-end, my favourite build.", summary:'Architected and led full-stack delivery of MIRA — a real-time enterprise asset tracking platform for hospitals — spanning .NET 8 backend microservices, an Angular frontend, and end-to-end DevOps pipelines.', bullets:['Architected & led MIRA — real-time hospital asset tracking on .NET 8 Clean Architecture with EF Core + PostgreSQL and live SignalR.','Enterprise security with Zitadel OAuth2/OIDC, JWT & RBAC for multi-tenant hospitals; full observability via OpenTelemetry + Jaeger and Serilog.','Containerized deploys (Docker) with env-specific configs and Werf CI/CD; health monitoring across every microservice.','Modular Angular + NgRx frontend — SSO (Google, Azure AD), ECharts/Syncfusion dashboards, Jest + Cypress tests and Husky pre-commit gates.'], tags:['.NET 8','Clean Architecture','Angular','NgRx','SignalR','Zitadel','OpenTelemetry','Jaeger','Docker','Werf','Cypress'] },
+  { kind:'work', company:'Sweya AI', role:'Senior Software Engineer', period:'Apr 2023 – Jan 2025', place:'India · Remote', say:"Sr. engineer at Sweya — the GSK pharma platforms: DDD, Casbin RBAC, Kafka & SignalR.", summary:'GSK Real-Time Expense Management & GSK Order Management — .NET backend API development with Angular 17 frontends for a global pharmaceutical client.', bullets:['Architected .NET DDD backends for GSK Expense & Order — rich domain models, value objects, aggregate roots and domain events.','CQRS with MediatR plus Unit of Work + generic repositories with soft-delete & audit trails on EF Core + PostgreSQL.','Feature-level RBAC with Casbin (custom CasbinAuthorizeAttribute), Zitadel OAuth2/OIDC and comprehensive audit logging.','SignalR hubs for real-time claim status, Hangfire async jobs, versioned REST APIs with Swagger and OpenTelemetry + Serilog.','Integrated the Angular 17 frontend — HTTP interceptors, Zitadel token management and auto-generated OpenAPI clients.'], tags:['.NET','DDD','CQRS','MediatR','Casbin RBAC','SignalR','Hangfire','PostgreSQL','Angular 17','Zitadel'] },
+  { kind:'work', company:'Sweya AI', role:'Software Engineer · Founding Engineer', period:'Aug 2022 – Apr 2023', place:'India · Remote', say:"founding engineer on Clappit — built ClappBot, drove +70% engagement.", summary:'Joined as a Founding Engineer on Clappit — an AI-powered cloud infrastructure SaaS — contributing across an Nx monorepo frontend, a DDD backend API, and a multi-tenant notification microservice.', bullets:['Founding engineer on Clappit — modular Nx monorepo across Angular 17 & Next.js 14 with shared auth/core/UI libraries.','DDD backend for CI/CD pipeline & deployment management; ArgoCD GitOps on Kubernetes with self-healing, auto-rollback & Helm.','Multi-tenant notification microservice (DDD + CQRS) over Kafka + RabbitMQ with MessagePack distributed caching.','Built ClappBot (Rasa AI) for conversational infra operations — boosting platform user engagement by 70%.'], tags:['.NET Core','Nx Monorepo','Angular 17','Next.js 14','Kubernetes','ArgoCD','Kafka','RabbitMQ','Rasa AI','Helm'] },
+  { kind:'work', company:'Brain Station 23', role:'Associate Software Engineer', period:'Nov 2021 – Jul 2022', place:'Dhaka, Bangladesh', say:"e-commerce at scale — nopCommerce storefronts for Apex, Shwapno & Sailor, serving millions.", summary:'Shipped production e-commerce platforms for clients including Apex, Shwapno, and Sailor — serving millions of end users.', bullets:['Shipped nopCommerce storefronts for Apex, Shwapno & Sailor — collectively serving hundreds of thousands of monthly users.','Contributed custom plugins & themes to the nopCommerce open-source framework, adopted by client storefronts.','Tuned performance & reliability with Redis caching and AWS auto-scaling (EC2, RDS, S3).','Scored 98% on the nopCommerce Certified Developer exam (Feb 2022); set up Azure CI/CD & GitLab branching workflows.'], tags:['nopCommerce','.NET Core','Angular','SQL Server','Redis','AWS','Azure CI/CD'] },
+  { kind:'work', company:'LEADS Corporation Limited', role:'Associate Software Engineer', period:'Jan 2020 – Oct 2021', place:'Dhaka, Bangladesh', say:"modernized legacy banking & built eKYC for 3 banks. awarded 'A Significant Contributor'.", summary:'Modernized legacy banking solutions and built digital-first financial products for clients including Dhaka Bank, IPDC Finance, and Southeast Bank.', bullets:['Migrated legacy banking systems to .NET Core 3.1 microservices — enabling a next-gen Core Banking System.','Built 90+ Vue.js/Vuex SPA pages and 100+ RESTful APIs for internet banking & eKYC platforms.','Delivered eKYC for Dhaka Bank, IPDC & Southeast Bank — Google Vision AI, OCR & NID biometric verification.','Integrated RabbitMQ for events, Ocelot API gateway and Oracle DB; cut PL/SQL bottlenecks on high-volume transactions.','Awarded "A Significant Contributor" (Sep 2021) for delivering the next-gen Core Banking System.'], tags:['.NET Core','Vue.js','Vuex','Oracle','RabbitMQ','Ocelot','eKYC','PL/SQL'] },
+  { kind:'edu', company:'American International University-Bangladesh', role:'BSc in Computer Science', period:'2016 – 2020', place:'Dhaka · GPA 3.58 / 4.0', say:"AIUB is my university — BSc Computer Science. this is where the engineering foundation started.", summary:'Graduated with a GPA of 3.58/4.0, specializing in advanced software engineering, data mining, and computer vision.', bullets:['BSc in Computer Science, GPA 3.58/4.0 — specialized in software engineering, data mining & computer vision.','Authored research: "Dynamic Recovering of Body Configurations by Combining Segmentation and Recognition."','Built ML projects — a Heart Disease Finder (supervised) and a dietary suggester (unsupervised).','Member of the Computer Vision Research Group and advanced software-engineering labs.'], tags:['Computer Science','OOP','Data Structures','Machine Learning','Computer Vision','Data Mining'] },
+];
+
+/* ── Render capabilities ── */
+function renderCaps() {
+  const g = document.getElementById('caps-grid');
+  g.innerHTML = CAPS.map(c => `
+    <div class="pxl-cap reveal" data-mascot-say="${c.say}" style="position:relative;padding:22px;background:var(--surface-card);border:1px solid var(--border-default);border-radius:12px;box-shadow:var(--edge-top),var(--shadow-sm);">
+      <div style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;background:rgba(33,217,210,.10);border:1px solid rgba(33,217,210,.30);color:var(--cyan-400);margin-bottom:16px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${c.icon}</svg>
+      </div>
+      <h3 style="margin:0 0 7px;font-family:var(--font-display);font-size:18px;font-weight:600;letter-spacing:-.01em;color:var(--fg-1);">${c.title}</h3>
+      <p style="margin:0 0 14px;font-size:14px;line-height:1.55;color:var(--fg-3);">${c.blurb}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">${c.tags.map(t=>`<span class="pxl-chip" style="font-family:var(--font-mono);font-size:11px;padding:3px 8px;border-radius:5px;color:var(--fg-2);background:var(--surface-raised);border:1px solid var(--border-default);">${t}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+/* ── Render projects ── */
+function renderProjects() {
+  const g = document.getElementById('work-grid');
+  g.innerHTML = CATEGORIES.map(cat => {
+    const items = cat.items.map(p => {
+      const live = LIVE_MAP[p.name];
+      const isResearch = RESEARCH.has(p.name);
+      let pill = '';
+      if (live) {
+        pill = `<a href="${live}" target="_blank" rel="noopener" class="pxl-prod" data-mascot-say="this one's live in production — click to open the real thing ↗" style="position:relative;z-index:4;display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;background:rgba(70,222,139,.12);border:1px solid rgba(70,222,139,.42);text-decoration:none;transition:background var(--dur-fast),border-color var(--dur-fast),box-shadow var(--dur-base);"><i style="width:6px;height:6px;border-radius:50%;background:var(--green-500);box-shadow:0 0 7px var(--green-500);animation:pxl-glow 1.6s infinite;display:block;"></i><span style="font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--green-500);">Live ↗</span></a>`;
+      } else if (isResearch) {
+        pill = `<span data-mascot-say="an academic research project from my CS degree at AIUB." style="position:relative;z-index:4;display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;background:rgba(255,178,36,.08);border:1px solid rgba(255,178,36,.32);"><i style="width:6px;height:6px;border-radius:50%;background:var(--amber-500);box-shadow:0 0 7px var(--amber-500);animation:pxl-glow 1.9s infinite;display:block;"></i><span style="font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-500);">Research</span></span>`;
+      } else {
+        pill = `<span data-mascot-say="shipped & running in production for an enterprise client — internal, so no public link." style="position:relative;z-index:4;display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;background:rgba(33,217,210,.08);border:1px solid rgba(33,217,210,.28);"><i style="width:6px;height:6px;border-radius:50%;background:var(--cyan-400);box-shadow:0 0 7px var(--cyan-400);animation:pxl-glow 1.9s infinite;display:block;"></i><span style="font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan-400);">In production</span></span>`;
+      }
+      return `
+        <div class="pxl-proj reveal" data-motif-host data-mascot-say="${p.say}" style="position:relative;display:flex;flex-direction:column;padding:20px;background:var(--surface-card);border:1px solid var(--border-default);border-radius:12px;box-shadow:var(--edge-top),var(--shadow-sm);overflow:hidden;">
+          <a href="${p.href}" aria-label="${p.name}" style="position:absolute;inset:0;z-index:2;"></a>
+          <div class="pxl-cover" style="position:absolute;inset:0;opacity:0;background:radial-gradient(110% 80% at 100% 0%,rgba(33,217,210,.10),transparent 60%);transition:opacity var(--dur-base);pointer-events:none;"></div>
+          <div style="position:relative;height:58px;margin:-20px -20px 14px;background:var(--ink-1000);border-bottom:1px solid var(--border-subtle);border-radius:12px 12px 0 0;overflow:hidden;">
+            <canvas data-motif="${p.motif}" style="display:block;width:100%;height:100%;"></canvas>
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,11,13,.55),transparent 38%,transparent 62%,rgba(8,11,13,.5));pointer-events:none;"></div>
+            <span style="position:absolute;left:9px;bottom:7px;padding:2px 7px;border-radius:5px;background:rgba(8,11,13,.5);backdrop-filter:blur(3px);font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3);pointer-events:none;">${p.motifLabel}</span>
+          </div>
+          <div style="position:relative;display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
+            <span style="font-family:var(--font-display);font-size:18px;font-weight:600;letter-spacing:-.01em;color:var(--fg-1);">${p.name}</span>
+            ${p.flagship ? '<span style="font-family:var(--font-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:4px;color:var(--cyan-400);background:rgba(33,217,210,.10);border:1px solid rgba(33,217,210,.30);">deep-dive</span>' : ''}
+          </div>
+          <div style="position:relative;font-family:var(--font-mono);font-size:11.5px;color:var(--fg-3);">${p.meta}</div>
+          <div style="position:relative;margin:12px 0 14px;">${pill}</div>
+          <p style="position:relative;margin:0 0 14px;font-size:13.5px;line-height:1.55;color:var(--fg-3);flex:1;">${p.blurb}</p>
+          <div style="position:relative;display:flex;flex-wrap:wrap;gap:5px;">${p.tech.map(t=>`<span style="font-family:var(--font-mono);font-size:10.5px;padding:2px 7px;border-radius:5px;color:var(--fg-2);background:var(--surface-raised);border:1px solid var(--border-default);">${t}</span>`).join('')}</div>
+          <div style="position:relative;margin-top:12px;padding-top:12px;border-top:1px solid var(--border-subtle);display:flex;align-items:center;gap:7px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-500)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <span style="font-family:var(--font-mono);font-size:11.5px;color:var(--cyan-400);">${p.impact}</span>
+          </div>
+        </div>`;
+    }).join('');
+    return `
+      <div class="reveal" style="margin-top:44px;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+          <span style="font-family:var(--font-display);font-size:14px;font-weight:600;letter-spacing:.01em;color:var(--fg-2);">${cat.label}</span>
+          <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent);"></span>
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--fg-4);">${cat.count}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(${cat.cols},1fr);gap:16px;">${items}</div>
+      </div>`;
+  }).join('');
+}
+
+/* ── Render timeline ── */
+function renderTimeline() {
+  const g = document.getElementById('timeline-entries');
+  g.innerHTML = TIMELINE.map((t, i) => {
+    const isEdu = t.kind === 'edu';
+    const dotColor = isEdu ? 'var(--amber-500)' : 'var(--cyan-500)';
+    const dotGlow = isEdu ? 'rgba(255,178,36,.4)' : 'rgba(33,217,210,.4)';
+    const dotRadius = isEdu ? '3px' : '50%';
+    const tagColor = isEdu ? 'var(--amber-500)' : 'var(--cyan-400)';
+    const tagBg = isEdu ? 'rgba(255,178,36,.08)' : 'rgba(33,217,210,.10)';
+    const tagBd = isEdu ? 'rgba(255,178,36,.32)' : 'rgba(33,217,210,.30)';
+    const kindLabel = isEdu ? 'Education' : 'Experience';
+    return `
+      <div class="reveal tl-entry${i === 0 ? ' open' : ''}" data-mascot-say="${t.say}" style="position:relative;padding:0 0 32px 22px;">
+        <span style="position:absolute;left:-28px;top:3px;width:12px;height:12px;border-radius:${dotRadius};background:var(--ink-950);border:2px solid ${dotColor};box-shadow:0 0 10px ${dotGlow};display:block;"></span>
+        <button class="tl-head" aria-expanded="${i === 0 ? 'true' : 'false'}">
+          <svg class="tl-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          <span class="tl-head-main">
+            <span style="font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--fg-1);">${t.company}</span>
+            <span style="font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:4px;color:${tagColor};background:${tagBg};border:1px solid ${tagBd};">${kindLabel}</span>
+            <span style="font-family:var(--font-mono);font-size:11.5px;color:var(--cyan-400);">${t.role}</span>
+          </span>
+          <span class="tl-cue" aria-hidden="true">
+            <span class="tl-cue-closed">${t.bullets.length} ${isEdu ? 'highlights' : 'wins'} <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+            <span class="tl-cue-open">collapse <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></span>
+          </span>
+        </button>
+        <div style="font-family:var(--font-mono);font-size:11.5px;color:var(--fg-4);margin:4px 0 11px;padding-left:22px;">${t.period} · ${t.place}</div>
+        ${t.summary ? `<p style="margin:0;max-width:690px;font-size:14.5px;line-height:1.6;color:var(--fg-1);padding-left:22px;">${t.summary}</p>` : ''}
+        <div class="tl-body" style="padding-left:22px;">
+          <div style="display:flex;flex-direction:column;gap:7px;max-width:690px;">
+            ${t.bullets.map(b=>`<div class="tl-bullet" style="display:flex;gap:9px;align-items:flex-start;"><svg style="flex:0 0 auto;margin-top:3px;" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="${dotColor}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span style="font-size:14px;line-height:1.55;color:var(--fg-2);">${b}</span></div>`).join('')}
+          </div>
+          ${t.tags ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:13px;max-width:690px;">${t.tags.map(tag=>`<span style="font-family:var(--font-mono);font-size:10.5px;padding:2px 8px;border-radius:5px;color:var(--fg-2);background:var(--surface-raised);border:1px solid var(--border-default);">${tag}</span>`).join('')}</div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+  // accordion toggle
+  g.querySelectorAll('.tl-entry').forEach(entry => {
+    const head = entry.querySelector('.tl-head');
+    if (!head) return;
+    head.addEventListener('click', () => {
+      const open = entry.classList.toggle('open');
+      head.setAttribute('aria-expanded', open ? 'true' : 'false');
+      // resync the cyan fill line to the new container height
+      const tl = document.getElementById('timeline'), fill = document.getElementById('timeline-fill');
+      if (tl && fill && window._tlGrown) setTimeout(() => { fill.style.height = (tl.offsetHeight - 12) + 'px'; }, 470);
+    });
+  });
+}
+
+/* ── Init renders ── */
+renderCaps();
+renderProjects();
+renderTimeline();
+
+/* ── Reveal system ── */
+const watchers = [];
+let pumpInterval, safetyTimeout;
+function addReveal(el) {
+  watchers.push({ el, done: false });
+}
+function checkReveals() {
+  const vh = window.innerHeight || 800;
+  watchers.forEach(w => {
+    if (w.done) return;
+    if (!w.el) { w.done = true; return; }
+    const r = w.el.getBoundingClientRect();
+    if (r.top < vh * 0.9 && r.bottom > -100) {
+      w.done = true;
+      if (w.el.classList) w.el.classList.add('in');
+      triggerTimelineGrow(w.el);
+      if (w.onReveal) w.onReveal();
+    }
+  });
+}
+function revealAll() { watchers.forEach(w => { if (!w.done) { w.done = true; w.el.classList.add('in'); } }); }
+function triggerTimelineGrow(el) {
+  const tl = document.getElementById('timeline');
+  if (tl && tl.contains(el) && !window._tlGrown) { window._tlGrown = true; setTimeout(() => { const f = document.getElementById('timeline-fill'); if (f && tl) f.style.height = (tl.offsetHeight - 12) + 'px'; }, 200); }
+}
+function initReveals() {
+  document.querySelectorAll('.reveal').forEach(el => addReveal(el));
+  window.addEventListener('scroll', checkReveals, { passive: true });
+  window.addEventListener('resize', checkReveals, { passive: true });
+  let n = 0;
+  pumpInterval = setInterval(() => { checkReveals(); if (++n > 40) clearInterval(pumpInterval); }, 180);
+  safetyTimeout = setTimeout(revealAll, 5200);
+  checkReveals();
+}
+initReveals();
+
+/* ── Counter animation ── */
+document.querySelectorAll('[data-count]').forEach(el => {
+  watchers.push({
+    el, done: false,
+    onReveal() {
+      const target = parseInt(el.getAttribute('data-count'), 10) || 0;
+      const t0 = performance.now(), dur = 1100;
+      const step = ts => {
+        const p = Math.min(1, (ts - t0) / dur);
+        el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+  });
+});
+const origCheck = checkReveals;
+window.addEventListener('scroll', () => {
+  const vh = window.innerHeight || 800;
+  watchers.forEach(w => {
+    if (w.done || !w.onReveal) return;
+    const r = w.el.getBoundingClientRect();
+    if (r.top < vh * 0.9 && r.bottom > -100) { w.done = true; w.onReveal(); }
+  });
+}, { passive: true });
+// Also check immediately
+setTimeout(() => {
+  const vh = window.innerHeight || 800;
+  watchers.forEach(w => {
+    if (w.done || !w.onReveal) return;
+    const r = w.el.getBoundingClientRect();
+    if (r.top < vh * 0.9 && r.bottom > -100) { w.done = true; w.onReveal(); }
+  });
+}, 200);
+
+/* ── Typing animation ── */
+const words = ['real-time hospital asset tracking','multi-tenant SaaS for global pharma','eKYC onboarding for banks','e-commerce for millions of users','cloud infra with an AI deploy-bot'];
+let wi = 0, ci = 0, dir = 1;
+const typeEl = document.getElementById('type-text');
+function tick() {
+  if (!typeEl) return;
+  ci += dir;
+  typeEl.textContent = words[wi].slice(0, ci);
+  let delay = dir > 0 ? 46 : 24;
+  if (dir > 0 && ci === words[wi].length) { delay = 1500; dir = -1; }
+  else if (dir < 0 && ci === 0) { dir = 1; wi = (wi + 1) % words.length; delay = 320; }
+  setTimeout(tick, delay);
+}
+tick();
+
+/* ── Pipeline animation ── */
+const pipeStages = [
+  { x:70,  label:'git push', icon:'M6 3v12M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 9a9 9 0 0 1-9 9' },
+  { x:305, label:'build',    icon:'M16 18l6-6-6-6M8 6l-6 6 6 6' },
+  { x:540, label:'test',     icon:'M20 6 9 17l-5-5' },
+  { x:775, label:'deploy',   icon:'M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16zM3.3 7 12 12l8.7-5M12 22V12' },
+  { x:1010,label:'live',     icon:'M13 2 3 14h9l-1 8 10-12h-9l1-8z' },
+];
+const NS = 'http://www.w3.org/2000/svg';
+const pipeG = document.getElementById('pipe-stages');
+const stageEls = pipeStages.map(s => {
+  const grp = document.createElementNS(NS, 'g');
+  const ring = document.createElementNS(NS, 'circle');
+  ring.setAttribute('cx', s.x); ring.setAttribute('cy', 58); ring.setAttribute('r', 22);
+  ring.setAttribute('fill', 'var(--ink-900)'); ring.setAttribute('stroke', 'var(--line)'); ring.setAttribute('stroke-width', 2);
+  const ico = document.createElementNS(NS, 'path');
+  ico.setAttribute('d', s.icon); ico.setAttribute('transform', `translate(${s.x-9},49) scale(0.75)`);
+  ico.setAttribute('fill', 'none'); ico.setAttribute('stroke', 'var(--fg-4)'); ico.setAttribute('stroke-width', 2.4);
+  ico.setAttribute('stroke-linecap', 'round'); ico.setAttribute('stroke-linejoin', 'round');
+  const lab = document.createElementNS(NS, 'text');
+  lab.setAttribute('x', s.x); lab.setAttribute('y', 100); lab.setAttribute('text-anchor', 'middle');
+  lab.setAttribute('fill', 'var(--fg-3)'); lab.setAttribute('font-size', 13); lab.setAttribute('font-family', 'var(--font-mono)');
+  lab.textContent = s.label;
+  grp.appendChild(ring); grp.appendChild(ico); grp.appendChild(lab); pipeG.appendChild(grp);
+  return { ring, ico, lab };
+});
+let pipeRunning = false;
+/* ── Pipeline + deploy terminal, driven by ONE synced timeline ──
+   Each terminal command moves the packet to its matching stage and lights it. */
+function runPipeline() {
+  const x0 = 70;
+  const term = document.getElementById('deploy-term');
+  const packet = document.getElementById('pipe-packet');
+  const fill = document.getElementById('pipe-fill');
+
+  // reset stages, packet, fill, terminal
+  stageEls.forEach(s => { s.ring.setAttribute('stroke', 'var(--line)'); s.ring.setAttribute('fill', 'var(--ink-900)'); s.ico.setAttribute('stroke', 'var(--fg-4)'); });
+  if (fill) fill.setAttribute('x2', x0);
+  if (packet) { packet.setAttribute('cx', x0); packet.setAttribute('opacity', 0); }
+  if (term) term.innerHTML = '';
+  let curX = x0;
+
+  // Every terminal line maps to a pipeline stage (or null for in-between sub-steps)
+  const seq = [
+    { t:'❯ git push origin main',               c:'var(--fg-1)',      stage:0 },
+    { t:'Enumerating objects: 48, done.',        c:'var(--fg-4)',      stage:null },
+    { t:'❯ pxl deploy --prod',                   c:'var(--fg-1)',      stage:null },
+    { t:'→ dotnet build · Clean Architecture',   c:'var(--fg-2)',      stage:1 },
+    { t:'✓ xUnit · 214 passed',                  c:'var(--green-500)', stage:2 },
+    { t:'→ docker build · rolling update',       c:'var(--fg-2)',      stage:3 },
+    { t:'✓ live · 0 downtime · 2.1s · P99 64ms', c:'var(--green-500)', stage:4 },
+  ];
+
+  function lightStage(idx) {
+    const done = idx === pipeStages.length - 1;
+    stageEls[idx].ring.setAttribute('stroke', done ? 'var(--green-500)' : 'var(--cyan-500)');
+    stageEls[idx].ring.setAttribute('fill', done ? 'rgba(70,222,139,.12)' : 'rgba(33,217,210,.12)');
+    stageEls[idx].ico.setAttribute('stroke', done ? 'var(--green-500)' : 'var(--cyan-400)');
+  }
+  function tweenPacket(toX, dur, cb) {
+    const fromX = curX; let st = null;
+    if (packet) packet.setAttribute('opacity', 1);
+    const anim = ts => {
+      if (!st) st = ts;
+      const p = Math.min(1, (ts - st) / dur);
+      curX = fromX + (toX - fromX) * p;
+      if (packet) packet.setAttribute('cx', curX);
+      if (fill) fill.setAttribute('x2', curX);
+      if (p < 1) requestAnimationFrame(anim);
+      else { curX = toX; if (cb) cb(); }
+    };
+    requestAnimationFrame(anim);
+  }
+  function appendLine(ln) {
+    if (!term) return;
+    const row = document.createElement('div');
+    row.style.color = ln.c; row.style.whiteSpace = 'pre-wrap'; row.style.opacity = 0;
+    row.style.transition = 'opacity .25s ease'; row.textContent = ln.t;
+    term.appendChild(row); requestAnimationFrame(() => { row.style.opacity = 1; });
+    beep(ln.t.charAt(0) === '✓' ? 660 : 520, .03);
+  }
+
+  let i = 0;
+  function nextStep() {
+    if (i >= seq.length) { setTimeout(runPipeline, 2600); return; }   // hold, then loop
+    const ln = seq[i++];
+    appendLine(ln);
+    if (ln.stage != null) {
+      const last = ln.stage === pipeStages.length - 1;
+      tweenPacket(pipeStages[ln.stage].x, 720, () => {
+        lightStage(ln.stage);
+        if (last && packet) packet.setAttribute('opacity', 0);
+        setTimeout(nextStep, last ? 700 : 380);
+      });
+    } else {
+      setTimeout(nextStep, 470);
+    }
+  }
+  nextStep();
+}
+const pipeContainer = document.getElementById('pipe-container');
+watchers.push({ el: pipeContainer, done: false, onReveal() { if (!pipeRunning) { pipeRunning = true; runPipeline(); } } });
+
+/* ── Sparkline ── */
+const N = 40; let sparkData = Array.from({length:N}, () => 55 + Math.random()*25);
+const W = 320, H = 90;
+function drawSpark() {
+  const min = 35, max = 100;
+  const pts = sparkData.map((v,i) => `${(i/(N-1))*W},${H - ((v-min)/(max-min))*H}`).join(' ');
+  const sf = document.getElementById('spark-fill'), sl = document.getElementById('spark-line');
+  if (sl) sl.setAttribute('points', pts);
+  if (sf) sf.setAttribute('points', `0,${H} ${pts} ${W},${H}`);
+}
+drawSpark();
+let sparkOn = false, lastSpark;
+function sparkLoop(ts) {
+  if (!lastSpark) lastSpark = ts;
+  if (ts - lastSpark > 220) {
+    lastSpark = ts;
+    sparkData.push(Math.max(38, Math.min(98, sparkData[sparkData.length-1] + (Math.random()-.5)*22)));
+    sparkData.shift(); drawSpark();
+    const rps = Math.round(1100 + sparkData[sparkData.length-1]*42 + Math.random()*120);
+    const rv = document.getElementById('rps-val'), pv = document.getElementById('p99-val');
+    if (rv) rv.textContent = rps.toLocaleString();
+    if (pv) pv.textContent = 52 + Math.round(Math.random()*22);
+  }
+  requestAnimationFrame(sparkLoop);
+}
+watchers.push({ el: document.getElementById('spark-fill'), done: false, onReveal() { if (!sparkOn) { sparkOn = true; requestAnimationFrame(sparkLoop); } } });
+
+/* ── Uptime ── */
+const t0up = Date.now();
+const uptimeEl = document.getElementById('uptime-display');
+setInterval(() => {
+  const s = Math.floor((Date.now() - t0up) / 1000);
+  const hh = String(Math.floor(s/3600)).padStart(2,'0');
+  const mm = String(Math.floor((s%3600)/60)).padStart(2,'0');
+  const ss = String(s%60).padStart(2,'0');
+  if (uptimeEl) uptimeEl.textContent = `session uptime ${hh}:${mm}:${ss} · 99.98% · still shipping`;
+}, 1000);
+
+/* ── Sound ── */
+let soundOn = false, ac;
+try { soundOn = localStorage.getItem('pxl-sound') === '1'; } catch(e){}
+function beep(freq, gain, dur) {
+  if (!soundOn) return;
+  try {
+    if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = 'square'; o.frequency.value = freq;
+    g.gain.value = gain || .03; o.connect(g); g.connect(ac.destination);
+    o.start(); g.gain.exponentialRampToValueAtTime(.0001, ac.currentTime + (dur || .06));
+    o.stop(ac.currentTime + (dur || .06));
+  } catch(e){}
+}
+function syncSound() {
+  const btn = document.getElementById('btn-sound'), wave = document.getElementById('sound-wave');
+  if (btn) btn.style.color = soundOn ? 'var(--cyan-400)' : 'var(--fg-3)';
+  if (wave) wave.style.opacity = soundOn ? '1' : '.25';
+}
+syncSound();
+document.getElementById('btn-sound').addEventListener('click', () => {
+  soundOn = !soundOn;
+  try { localStorage.setItem('pxl-sound', soundOn ? '1' : '0'); } catch(e){}
+  syncSound(); if (soundOn) beep(880, .05, .1);
+});
+document.querySelectorAll('a[href], button, .pxl-chip').forEach(el => el.addEventListener('mouseenter', () => beep(720, .02, .04)));
+document.querySelectorAll('.pxl-cta, .pxl-proj').forEach(el => el.addEventListener('click', () => beep(440, .05, .08)));
+
+/* ── Motifs ── */
+import('./motifs.js').then(({ mountMotifs }) => { mountMotifs(document.body); }).catch(() => {});
+
+/* ── Section narration ── */
+const sections = Array.from(document.querySelectorAll('[data-section-say]')).map(el => ({ el, text: el.getAttribute('data-section-say'), last: 0, inside: false }));
+function checkSections() {
+  const vh = window.innerHeight || 800, now = performance.now();
+  sections.forEach(s => {
+    const r = s.el.getBoundingClientRect();
+    const inView = r.top < vh * .45 && r.bottom > vh * .3;
+    if (inView && !s.inside) {
+      s.inside = true;
+      if (now - s.last > 9000) { s.last = now; mascotSay(s.text, 3600); }
+    } else if (!inView && r.top > vh * .55) { s.inside = false; }
+  });
+}
+window.addEventListener('scroll', checkSections, { passive: true });
+setTimeout(checkSections, 1600);
+
+/* ── Mascot ── */
+const mascotRoot = document.getElementById('mascot');
+const mascotFace = document.getElementById('mascot-face');
+const mascotEyes = document.getElementById('mascot-eyes');
+const mascotArm = document.getElementById('mascot-arm');
+const mascotBubble = document.getElementById('mascot-bubble');
+const mascotSayEl = document.getElementById('mascot-say');
+let cur = { x: window.innerWidth * .6, y: window.innerHeight * .42 };
+let tgt = { ...cur }, prev = { ...cur };
+let facing = 1, lastSayTime = 0, bubbleUntil = 0;
+function mascotSay(text, dur) {
+  const now = performance.now();
+  if (now - lastSayTime < 650 && now < bubbleUntil) return;
+  lastSayTime = now; bubbleUntil = now + (dur || 2600);
+  if (mascotSayEl) mascotSayEl.textContent = text;
+  if (mascotBubble) {
+    mascotBubble.style.transition = 'none';
+    mascotBubble.style.animation = 'none';
+    void mascotBubble.offsetWidth;
+    mascotBubble.style.animation = 'mascot-pop .34s var(--ease-snap) forwards';
+  }
+  mascotWave();
+}
+function mascotWave() {
+  if (!mascotArm) return;
+  mascotArm.style.animation = 'none'; void mascotArm.offsetWidth;
+  mascotArm.style.animation = 'mascot-wave .5s var(--ease-out) 3';
+}
+window.addEventListener('mousemove', e => { tgt.x = e.clientX; tgt.y = e.clientY; }, { passive: true });
+document.addEventListener('mouseover', e => {
+  const el = e.target && e.target.closest ? e.target.closest('[data-mascot-say]') : null;
+  if (el) mascotSay(el.getAttribute('data-mascot-say'), 2600);
+}, { passive: true });
+window.addEventListener('pixel-say', e => { if (e.detail && e.detail.text) mascotSay(e.detail.text, e.detail.dur || 3200); });
+function mascotLoop() {
+  cur.x += (tgt.x - cur.x) * .14; cur.y += (tgt.y - cur.y) * .14;
+  const vx = cur.x - prev.x, vy = cur.y - prev.y;
+  prev.x = cur.x; prev.y = cur.y;
+  if (mascotRoot) mascotRoot.style.transform = `translate3d(${cur.x + 20}px,${cur.y + 22}px,0)`;
+  if (vx < -.35) facing = -1; else if (vx > .35) facing = 1;
+  if (mascotFace) mascotFace.style.transform = `scaleX(${facing})`;
+  if (mascotEyes) {
+    const ex = Math.max(-2.2, Math.min(2.2, vx * .5));
+    const ey = Math.max(-1.6, Math.min(1.8, vy * .4));
+    mascotEyes.style.transform = `translate(${ex}px,${ey}px)`;
+  }
+  if (mascotBubble && performance.now() > bubbleUntil && mascotBubble.style.opacity !== '0') {
+    mascotBubble.style.transition = 'opacity .3s ease,transform .3s ease';
+    mascotBubble.style.opacity = '0'; mascotBubble.style.transform = 'scale(.6)';
+  }
+  requestAnimationFrame(mascotLoop);
+}
+requestAnimationFrame(mascotLoop);
+setTimeout(() => { mascotSay("hey — i'm Pixel. anik's little build-bot. i'll tag along ↓", 4600); mascotWave(); }, 900);
+
+/* ── Terminal overlay ── */
+const termOverlay = document.getElementById('term-overlay');
+const termOut = document.getElementById('term-out');
+const termInput = document.getElementById('term-input');
+let termBooted = false;
+function termPrint(text, color) {
+  if (!termOut) return;
+  const d = document.createElement('div'); d.textContent = text; d.style.whiteSpace = 'pre-wrap';
+  if (color) d.style.color = color; termOut.appendChild(d); termOut.scrollTop = termOut.scrollHeight;
+}
+function openTerm() {
+  if (!termOverlay) return;
+  termOverlay.style.display = 'flex';
+  if (!termBooted) { termBooted = true; termPrint("anik@portfolio:~$ welcome. type 'help' for commands.", 'var(--fg-3)'); }
+  setTimeout(() => { if (termInput) termInput.focus(); }, 30);
+}
+function closeTerm() { if (termOverlay) termOverlay.style.display = 'none'; }
+document.getElementById('btn-term').addEventListener('click', openTerm);
+document.getElementById('btn-close-term').addEventListener('click', closeTerm);
+if (termInput) termInput.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const val = e.target.value.trim(); e.target.value = '';
+  if (!val) return;
+  termPrint('❯ ' + val, 'var(--fg-1)'); beep(600, .03);
+  const cmd = val.toLowerCase();
+  const cmds = {
+    help: () => termPrint('commands: whoami · stack · projects · contact · resume · sudo · clear · exit', 'var(--cyan-400)'),
+    whoami: () => termPrint('Anik Sarker — Senior Software Engineer @ BMW Group Malaysia.\n.NET 8 · Angular · Microservices · DDD · CQRS · 6+ yrs.', 'var(--fg-2)'),
+    stack: () => termPrint('.NET 8 · ASP.NET Core · Angular · NgRx · SignalR · PostgreSQL · Docker · Kubernetes · Kafka · OpenTelemetry · OAuth2/OIDC', 'var(--fg-2)'),
+    projects: () => termPrint('MIRA · Clappit · GSK Expense · GSK Order · VerifID · 3× eKYC · Apex · Shwapno · Sailor — scroll up to explore.', 'var(--fg-2)'),
+    contact: () => termPrint('ach6266@gmail.com · linkedin.com/in/sarkeranik · github.com/sarkeranik', 'var(--green-500)'),
+    resume: () => { termPrint('opening résumé…', 'var(--cyan-400)'); window.open('Anik-Sarker-Resume.pdf', '_blank'); },
+    sudo: () => { termPrint("nice try. you don't have root here ;)", 'var(--amber-500)'); rain(); },
+    clear: () => { if (termOut) termOut.innerHTML = ''; },
+    exit: () => closeTerm(),
+  };
+  (cmds[cmd] || (() => termPrint(`command not found: ${val}  — try 'help'`, 'var(--red-500)')))();
+});
+
+/* ── Konami + global keys ── */
+const KSEQ = ['arrowup','arrowup','arrowdown','arrowdown','arrowleft','arrowright','arrowleft','arrowright','b','a'];
+let konamiBuffer = [];
+function rain() {
+  const host = document.getElementById('rain'); if (!host) return;
+  const glyphs = ['0','1','{','}','</>','✓','❯','λ','#'];
+  const colors = ['var(--cyan-400)','var(--magenta-400)','var(--green-500)','var(--fg-2)'];
+  for (let i = 0; i < 90; i++) {
+    const s = document.createElement('span');
+    s.textContent = glyphs[(Math.random()*glyphs.length)|0];
+    s.style.cssText = `position:absolute;top:-40px;left:${Math.random()*100}%;font-family:var(--font-mono);font-size:${10+Math.random()*14}px;color:${colors[(Math.random()*colors.length)|0]};opacity:${.5+Math.random()*.5};animation:pxl-rain ${1.6+Math.random()*2}s linear ${Math.random()*.8}s forwards;`;
+    host.appendChild(s); setTimeout(() => s.remove(), 4200);
+  }
+  beep(990, .05, .2);
+}
+window.addEventListener('keydown', e => {
+  if (e.key === '`') { e.preventDefault(); termOverlay.style.display === 'flex' ? closeTerm() : openTerm(); return; }
+  if (e.key === 'Escape') closeTerm();
+  const k = (e.key || '').toLowerCase();
+  konamiBuffer.push(k); konamiBuffer = konamiBuffer.slice(-KSEQ.length);
+  if (KSEQ.every((v,i) => konamiBuffer[i] === v)) { konamiBuffer = []; rain(); }
+});
+// Close on backdrop click
+termOverlay && termOverlay.addEventListener('click', e => { if (e.target === termOverlay) closeTerm(); });
+</script>
+</body>
+</html>
